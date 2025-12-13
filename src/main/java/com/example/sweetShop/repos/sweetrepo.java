@@ -7,6 +7,6 @@ import com.example.sweetShop.models.Sweet;
 
 
 @Repository
-public interface sweetrepo  extends JpaRepository<Sweet,Integer>{
+public interface Sweetrepo  extends JpaRepository<Sweet,Integer>{
 
 }
