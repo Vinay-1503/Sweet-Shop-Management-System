@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,79 +23,63 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("api/sweets")
 public class sweetController {
 
-	
-	Sweetrepo sweetrepo;
+    private final Sweetrepo sweetrepo;
 
-	
-	public sweetController(Sweetrepo sweetrepo) {
-		super();
-		this.sweetrepo = sweetrepo;
-	}
-	
-	
-	
-	@PostMapping("create")
-	private String sweetCreate(@RequestBody Sweet sweet){
-		
-		sweetrepo.save(sweet);
-		
-		return "sweet created";
-	}
-	
-	
-	@GetMapping("getall")
-    private List<Sweet> getsweets(){
-		
-		List<Sweet> allsweets = sweetrepo.findAll();
-		
-		
-		return allsweets;
-	 
-	}
-	
-	@GetMapping("getbyid/{id}")
-	private ResponseEntity<?> getbyId(@PathVariable int id) {
-		Optional<Sweet>  sweet = sweetrepo.findById(id);
-		
-		if(sweet.isEmpty()) {
-			return ResponseEntity.badRequest().build();
-					
-		
-		}else {
-			return ResponseEntity.ok(sweet.get());
-		}
-		
-	}
-	
-	@PutMapping("updateByid/{id}")
-	private Sweet updateSweet(@PathVariable int id, @RequestBody Sweet updated){
-		
-		Sweet exist = sweetrepo.findById(id).orElseThrow(null);
-		
-		exist.setSweetName(updated.getSweetName());
-		exist.setCategory(updated.getCategory());
-		exist.setPrice(updated.getPrice());
-		exist.setStock(updated.getStock());
-	
-		return 	sweetrepo.save(exist);
-		
-		
-		
-	}
-	
-	@DeleteMapping("deletebyid/{id}")
-private String deleteSwwt(@PathVariable int id){
-		
-		
-		sweetrepo.deleteById(id);
-	
-	
-		return 	"deleted successfully ";
-		
-		
-		
-	}
-	
-	
+    public sweetController(Sweetrepo sweetrepo) {
+        this.sweetrepo = sweetrepo;
+    }
 
+    // ✅ ADMIN ONLY
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("create")
+    public String sweetCreate(@RequestBody Sweet sweet) {
+        sweetrepo.save(sweet);
+        return "sweet created";
+    }
+
+    // ✅ USER + ADMIN
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("getall")
+    public List<Sweet> getsweets() {
+        return sweetrepo.findAll();
+    }
+
+    // ✅ USER + ADMIN
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping("getbyid/{id}")
+    public ResponseEntity<?> getbyId(@PathVariable int id) {
+
+        Optional<Sweet> sweet = sweetrepo.findById(id);
+
+        if (sweet.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(sweet.get());
+    }
+
+    // ✅ ADMIN ONLY
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("updateByid/{id}")
+    public Sweet updateSweet(
+            @PathVariable int id,
+            @RequestBody Sweet updated) {
+
+        Sweet exist = sweetrepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found"));
+
+        exist.setSweetName(updated.getSweetName());
+        exist.setCategory(updated.getCategory());
+        exist.setPrice(updated.getPrice());
+        exist.setStock(updated.getStock());
+
+        return sweetrepo.save(exist);
+    }
+
+    // ✅ ADMIN ONLY
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("deletebyid/{id}")
+    public String deleteSweet(@PathVariable int id) {
+        sweetrepo.deleteById(id);
+        return "deleted successfully";
+    }
 }

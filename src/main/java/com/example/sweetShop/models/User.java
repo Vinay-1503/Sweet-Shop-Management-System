@@ -16,7 +16,8 @@ public class User {
 	
 	private String password;
 	
-	private String role ="User";
+	
+	private String role ="USER";
 
 	public int getId() {
 		return id;
@@ -53,3 +54,4 @@ public class User {
 	
 
 }
+
