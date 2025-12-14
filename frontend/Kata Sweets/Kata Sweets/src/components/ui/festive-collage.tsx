@@ -1,5 +1,7 @@
 // Premium Festive Collage Section - Circular/Radial Layout
 import { useState, useEffect } from 'react';
+import { useScrollAnimation } from '@/hooks/use-scroll-animation';
+import { cn } from '@/lib/utils';
 
 const festiveImages = [
   '/festiveSweetHampers/sweet1.jpg',
