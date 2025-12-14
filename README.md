@@ -1,121 +1,90 @@
-Sweet Shop Management System
-Backend + Frontend Integration (Kata Sweets)
+# 🍬 Sweet Shop Management System  
+## Kata Sweets – Frontend + Backend Application
 
-A full-stack Sweet Shop Management System built with Spring Boot (Backend) and React + TypeScript (Frontend).
-This project demonstrates secure role-based authentication, RESTful APIs, JWT authorization, and a premium e-commerce UI.
+A full-stack **Sweet Shop Management System** combining a **premium e-commerce frontend (Kata Sweets)** with a **secure Spring Boot backend**.  
+This project demonstrates **modern UI design, RESTful APIs, JWT-based authentication, role-based authorization, and Test-Driven Development (TDD)**.
 
-📋 Table of Contents
+---
 
-Overview
+## 📋 Table of Contents
+- Overview  
+- Frontend – Kata Sweets  
+- Backend – Spring Boot API  
+- Tech Stack  
+- Project Structure  
+- Security & Authorization  
+- Testing Strategy (TDD)  
+- Getting Started  
+- My AI Usage  
+- Test Report  
+- Screenshots  
+- License  
 
-Frontend Application (Kata Sweets)
+---
 
-Backend Application
+## 🎯 Overview
 
-Tech Stack
+This repository contains **two major parts**:
 
-Project Structure
+### 1️⃣ Frontend – Kata Sweets  
+A **static, premium e-commerce UI** for a sweet & dessert shop.
 
-Security & Authorization
+### 2️⃣ Backend – Sweet Shop API  
+A **Spring Boot REST API** providing authentication, authorization, and admin/user access control.
 
-Testing Strategy (TDD)
+The frontend is currently **mock-data driven**, but structured to integrate seamlessly with backend APIs.
 
-Getting Started
+---
 
-Screenshots
+## 🎨 Frontend – Kata Sweets
 
-🤖 My AI Usage
+### Description
+Kata Sweets is a **showcase e-commerce application** built with a clean **white-first design** and **soft pink accents**, suitable for demos and portfolios.
 
-Test Report
+### Features
+- Single-page layout with smooth navigation  
+- Mock data (no backend dependency required)  
+- Clean, minimal UI  
+- Fully responsive (mobile, tablet, desktop)  
+- Mobile-ready using Capacitor  
 
-License
+---
 
-🎯 Overview
+## 🛠 Frontend Tech Stack
+- React 18  
+- TypeScript  
+- Vite  
+- Tailwind CSS  
+- React Router  
+- Zustand  
+- Lucide React  
+- Capacitor  
 
-This repository contains two main parts:
+---
 
-1️⃣ Frontend – Kata Sweets
+## 🚀 Frontend Setup
 
-A static, premium e-commerce UI showcasing a sweet & dessert shop experience.
+```bash
+cd frontend/Kata\ Sweets/Kata\ Sweets
+npm install
+npm run dev
+Frontend runs at:
+http://localhost:5173
 
-2️⃣ Backend – Sweet Shop Management System
+🔧 Backend – Spring Boot API
+Description
 
-A secure REST API providing authentication, authorization, and role-based access using JWT.
+The backend provides secure REST APIs using JWT-based authentication and role-based authorization.
 
-🎨 Frontend Application – Kata Sweets
-Premium Sweet & Dessert E-Commerce UI
+Features
 
-Kata Sweets is a white-first, minimal, premium e-commerce UI built for demonstration and portfolio use.
+JWT authentication
 
-Key Characteristics
+ADMIN / USER roles
 
-Single-page design with smooth scrolling
+Protected admin endpoints
 
-Static showcase (mock data, no backend dependency)
-
-Responsive design (mobile, tablet, desktop)
-
-Clean white + pink color palette
-
-Mobile-ready via Capacitor
-
-🛠 Frontend Tech Stack
-
-React 18
-
-TypeScript
-
-Vite
-
-Tailwind CSS
-
-React Router
-
-Zustand (state management)
-
-Lucide React (icons)
-
-Capacitor (mobile-ready)
-
-🎨 Design Philosophy
-
-✅ White-first UI (80–90% white)
-
-✅ Pink used only for emphasis
-
-✅ No gradients
-
-✅ No heavy animations
-
-❌ No gold / green themes
-
-📁 Frontend Structure
-frontend/Kata Sweets/
-├── public/                 # Images & static assets
-├── src/
-│   ├── components/         # Reusable UI components
-│   ├── pages/              # Home, Products, Cart, Login
-│   ├── data/               # Mock product & banner data
-│   ├── store/              # Zustand state
-│   ├── hooks/              # Custom hooks
-│   ├── lib/                # Utilities
-│   ├── App.tsx
-│   └── main.tsx
-├── tailwind.config.ts
-├── vite.config.ts
-└── package.json
-
-⚙️ Backend Application – Sweet Shop Management System
-
-The backend is a Spring Boot REST API that provides:
-
-User authentication
-
-JWT token generation
-
-Role-based authorization
-
-Secure API endpoints
+Clean architecture (Controller → Service → Repository)
 
 🛠 Backend Tech Stack
 
@@ -125,7 +94,7 @@ Spring Boot 3
 
 Spring Security
 
-JWT Authentication
+JWT
 
 Spring Data JPA
 
@@ -135,24 +104,10 @@ Maven
 
 JUnit 5 + MockMvc
 
-📁 Backend Structure
-sweetShop/
-├── src/main/java/com/example/sweetShop
-│   ├── controllers/        # REST controllers
-│   ├── services/           # Business logic
-│   ├── security/           # JWT, filters, config
-│   ├── models/             # Entities
-│   └── repositories/       # JPA repositories
-│
-├── src/test/java
-│   └── security/           # Authorization tests (TDD)
-│
-├── pom.xml
-└── README.md
-
 🔐 Security & Authorization
+Authentication
 
-JWT-based authentication
+Login endpoint returns JWT
 
 Token contains:
 
@@ -160,47 +115,36 @@ email
 
 role (ADMIN / USER)
 
-Protected Endpoints
+Authorization Rules
 Endpoint	Access
 /api/admin/**	ADMIN only
 /api/user/**	USER & ADMIN
 /api/login	Public
 🧪 Testing Strategy (TDD)
 
-This project follows a Test-Driven Development (TDD) approach for authorization.
+Backend security was developed using Test-Driven Development.
 
-Tests Cover
+Test Coverage
 
-✅ Admin access to admin endpoints
+Admin access allowed to admin endpoints
 
-❌ User forbidden from admin endpoints
+User access forbidden to admin endpoints
 
-❌ Invalid token handling
+Invalid token handling
 
-Tools Used
+Tools
 
 JUnit 5
 
+Spring Boot Test
+
 MockMvc
 
-Spring Security Test support
-
-🚀 Getting Started
-Prerequisites
-
-Java 17+
-
-Node.js 18+
-
-MySQL
-
-Maven
-
-Backend Setup
+▶ Backend Setup
 git clone https://github.com/Vinay-1503/Sweet-Shop-Management-System.git
 cd sweetShop
 
-Configure application.properties
+application.properties
 spring.datasource.url=jdbc:mysql://localhost:3306/sweetshop
 spring.datasource.username=root
 spring.datasource.password=your_password
@@ -209,36 +153,29 @@ Run Backend
 mvn spring-boot:run
 
 
-Backend runs on:
-
+Backend runs at:
 http://localhost:8080
 
-Frontend Setup
-cd frontend/Kata\ Sweets/Kata\ Sweets
-npm install
-npm run dev
-
-
-Frontend runs on:
-
-http://localhost:5173
-
-🖼 Screenshots
-
-📌 Add screenshots here:
-
-Homepage
-
-Product listing
-
-Cart
-
-Login page
+📁 Project Structure
+sweetShop/
+│
+├── src/main/java/com/example/sweetShop
+│   ├── controllers/
+│   ├── services/
+│   ├── security/
+│   ├── models/
+│   └── repositories/
+│
+├── src/test/java
+│   └── security/        # Authorization tests (TDD)
+│
+├── frontend/
+│   └── Kata Sweets/     # React frontend
+│
+├── pom.xml
+└── README.md
 
 🤖 My AI Usage (Mandatory)
-
-This project was developed using responsible and transparent AI assistance.
-
 AI Tools Used
 
 ChatGPT
@@ -248,21 +185,14 @@ Claude AI
 Gemini AI
 
 How I Used AI
-Backend Development
 
-Generated initial controller & service boilerplate
+Generated initial boilerplate for controllers and services
 
-Clarified Spring Security & JWT concepts
-
-Test-Driven Development (TDD)
-
-Used Claude AI to plan authorization test cases first
-
-Defined expected behaviors before implementation
-
-API Design
+Used Claude AI to plan TDD authorization tests
 
 Used Gemini AI to brainstorm REST API structure
+
+Used ChatGPT to understand Spring Security & JWT flows
 
 What AI Did NOT Do
 
@@ -270,40 +200,29 @@ What AI Did NOT Do
 
 ❌ No copied repositories
 
-❌ No blind code merging
+❌ No unchecked AI code merged
 
-All logic, fixes, and architecture decisions were manually implemented.
+All logic and architectural decisions were manually implemented.
 
-Impact on My Workflow
+Impact on Workflow
 
-AI helped improve:
+Faster development
 
-Development speed
+Better test clarity
 
-Test clarity
-
-Learning efficiency
+Improved understanding of security concepts
 
 AI acted as an assistant, not a replacement.
-
-Ethical & Responsible Use
-
-Fully transparent
-
-Reviewed & documented
-
-Original work only
 
 📄 Test Report
 Tests run: 3
 Failures: 0
 Errors: 0
 
-📜 License
+🖼 Screenshots
 
-This project is for demonstration and evaluation purposes.
+(Add screenshots of homepage, product page, cart, login)
 
-❤️ Final Note
+📄 License
 
-Made with care for Kata Sweets
-A clean, modern example of full-stack development with security & testing
+This project is for learning and demonstration purposes only
