@@ -1,0 +1,3671 @@
+@import './scroll-fix.css';
+
+/* Festive Collage - Perfect Centering & Alignment */
+.festive-santa-center {
+  position: absolute !important;
+  z-index: 10 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  border: 2px solid #ffffff !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.festive-surrounding-image {
+  position: absolute !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  border: 2px solid #ffffff !important;
+  transform: translate(-50%, -50%) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Safe Area Insets for Mobile Browsers (PWA/Fullscreen) */
+:root {
+  /* Safe area insets - fallback to 0 if not supported */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  
+  /* Dynamic header offset - set by JS */
+  --header-offset: 65px;
+  --header-gap: 8px;
+  
+  /* Brand theme colors */
+  --brand-gradient-start: #EC4899;
+  --brand-gradient-end: #F472B6;
+  --brand-accent: #F9A8D4;
+  --brand-btn-bg: linear-gradient(90deg, var(--brand-gradient-start), var(--brand-gradient-end));
+  --text-primary: #222;
+  --text-muted: #6B6B80;
+}
+
+/* Status Bar Styling for Mobile */
+@supports (padding: max(0px)) {
+  body {
+    padding-top: max(env(safe-area-inset-top, 0px), 0px);
+  }
+}
+
+/* Ensure status bar area has pink background on mobile */
+@media (max-width: 768px) {
+  html {
+    background-color: #FF6DAA;
+  }
+  
+  body {
+    background-color: #FFFFFF;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* Force filter section colors to use app's gray theme */
+[data-radix-select-content] {
+  background-color: #F5F6FA !important;
+  color: #1E1E2F !important;
+  border-color: #E5E7EB !important;
+}
+
+[data-radix-select-item] {
+  background-color: #F5F6FA !important;
+  color: #1E1E2F !important;
+}
+
+[data-radix-select-item]:hover,
+[data-radix-select-item][data-highlighted] {
+  background-color: #E5E7EB !important;
+  color: #1E1E2F !important;
+}
+
+[data-radix-select-item][data-state="checked"] {
+  background-color: #1E2A78 !important;
+  color: #FFFFFF !important;
+}
+
+@layer base {
+  :root {
+    /* Header Height Variable */
+    --appbar-total-h: 2.05cm; /* Exactly 2.05cm = ~77.5px at 96dpi */
+    --desktop-header-height: 80px;
+    
+    /* 🍰 LUXURY DESSERT COLOR PALETTE - Strict & Disciplined */
+    
+    /* Primary Brand Colors - Pink (REFINED & NORMALIZED) */
+    --primary: #FF6DAA; /* Primary accent - Rose Pink (ONE primary pink) */
+    --primary-hover: #FF9FC6; /* Lighter variant for hover (ONE lighter variant) */
+    --primary-light: #FFD1E3; /* Blush Pink for soft UI (ONE light variant) */
+    --primary-dark: #FF4A8F; /* Darker pink for depth (ONE darker accent) */
+    --primary-hsl: 330 100% 71%; /* HSL used by Tailwind utilities */
+    --primary-hover-hsl: 330 100% 80%; /* HSL for hover/active states */
+    --primary-light-hsl: 330 100% 90%; /* Very light pink variants in HSL */
+    --primary-dark-hsl: 330 100% 65%; /* Darker pink for depth in HSL */
+    --primary-rgb: 255 109 170; /* RGB used for alpha utilities */
+    --primary-hover-rgb: 255 159 198; /* RGB used for hover alpha utilities */
+    --primary-light-rgb: 255 209 227; /* RGB for light pink */
+    
+    /* Accent Colors - Red (SOFTENED) */
+    --accent-red: 200 28 55; /* #C83A3A - Softer red (reduced saturation by ~10%) */
+    --accent-red-dark: 183 26 38; /* #B72626 - Darker variant for gradients */
+    --accent-red-crimson: 220 20 60; /* #DC143C - Original crimson for buttons only */
+    
+    /* Background Colors - White-First Theme (REFINED) */
+    --white: #FFFFFF;
+    --bg-page: 255 255 255; /* #FFFFFF - Main page background (white - dominant) */
+    --bg-section: 255 244 234; /* #FFF4EA - Soft cream for rare highlights only */
+    --bg-gradient-start: 255 255 255; /* White */
+    --bg-gradient-end: 255 244 234; /* Soft cream */
+    --bg-white: 255 255 255; /* #FFFFFF - Pure white for cards */
+    
+    /* Text Colors - Near-Black (STRICT) */
+    --text-primary: 31 31 31; /* #1F1F1F - Near-black for headings + body */
+    --text-secondary: 107 114 128; /* #6B7280 - Medium gray */
+    --text-muted: 156 163 175; /* #9CA3AF - Light gray */
+    
+    /* Borders - Very Light Pink (REFINED) */
+    --border-color: 243 225 234; /* #F3E1EA - Very light pink */
+    
+    /* Text Colors - Near-Black (STRICT) */
+    --dark-charcoal: 31 31 31; /* #1F1F1F - Near-black text */
+    
+    /* Semantic Colors */
+    --success: 34 197 94; /* #22C55E - Successful orders, in stock */
+    --warning: 245 158 11; /* #F59E0B - Low stock, promotions */
+    --error: 181 44 34; /* #B52C22 - Out of stock, errors, urgent */
+    --info: 59 130 246; /* #3B82F6 - Information, tips */
+    
+    /* Category Colors - Sweets Theme */
+    --fruits-color: 255 107 107; /* #FF6B6B - Chocolates section */
+    --vegetables-color: 236 72 153; /* #EC4899 - Candies section */
+    --dairy-color: 251 146 60; /* #FB923C - Desserts */
+    --bakery-color: 244 114 182; /* #F472B6 - Cakes & Pastries */
+    
+    /* Supporting Colors */
+    --warm-grey: 229 231 235; /* #E5E7EB - Borders, dividers */
+    --muted-slate: 71 85 105; /* #475569 - Muted text */
+    
+    /* Shadcn/UI Compatible Variables */
+    --background: 255 255 255; /* #FFFFFF - Pure white background */
+    --foreground: var(--text-primary); /* #1E1E2F - Dark gray text */
+    --card: 255 255 255; /* #FFFFFF - White for cards */
+    --card-foreground: var(--text-primary); /* #1E1E2F - Dark gray card text */
+    --popover: 255 255 255; /* #FFFFFF - Pure white popover */
+    --popover-foreground: var(--text-primary); /* #1E1E2F - Dark gray popover text */
+    
+    /* Primary theme mapping - Pink (STRICT) */
+    --primary-foreground: 255 255 255; /* White text on primary */
+    --primary-light: var(--primary-light); /* #FF9FC6 - Light pink hover states */
+    --primary-dark: var(--primary-dark); /* #FF6DAA - Primary pink */
+    --primary-glow: var(--primary-light); /* HSL - Pink glow effects */
+    
+    /* Secondary theme mapping - Cream Backgrounds */
+    --secondary: 255 247 236; /* #FFF7EC - Cream section backgrounds */
+    --secondary-foreground: var(--text-primary); /* #1F1F1F - Near-black text */
+    
+    /* Accent theme mapping - Red for urgent highlights */
+    --accent: var(--accent-red); /* #DC143C - Notifications, discounts, urgent ONLY */
+    --accent-foreground: 255 255 255; /* White text on accent */
+    --accent-secondary: var(--primary-hover); /* #FF9FC6 - Secondary accent */
+    
+    /* Muted theme mapping */
+    --muted: 255 247 236; /* #FFF7EC - Cream backgrounds */
+    --muted-foreground: var(--text-muted); /* Light gray text */
+    
+    /* State colors */
+    --destructive: var(--accent-red); /* #B52C22 - Red for errors, urgent highlights */
+    --destructive-foreground: 255 255 255; /* White error text */
+    --success: var(--success); /* #10B981 - Green success */
+    --success-foreground: 255 255 255; /* White success text */
+    --info: var(--info); /* #3B82F6 - Blue for info */
+    --info-foreground: 255 255 255; /* White info text */
+    --warning: var(--warning); /* #F59E0B - Amber warnings */
+    --warning-foreground: 255 255 255; /* White warning text */
+    
+    --border: 330 30% 90%; /* #F2DCE6 - Light pink/gray border */
+    --input: 255 255 255; /* #FFFFFF - Pure white inputs */
+    --ring: var(--primary-hsl); /* Focus ring uses primary hue */
+    --radius: 12px; /* Increased radius for modern feel */
+
+    /* NO GRADIENTS - Solid colors only */
+    --gradient-primary: #FF6DAA;
+    --gradient-accent: #FF9FC6;
+    --gradient-subtle: #FFF7EC;
+    --gradient-overlay: rgba(0,0,0,0.4);
+    --gradient-card: #FFFFFF;
+
+    /* Premium shadows with better contrast - Point 1 */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary-hsl) / 0.25);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
+    --shadow-card: 0 4px 20px -2px hsl(33 37 41 / 0.08);
+    --shadow-floating: 0 20px 40px -12px hsl(var(--primary-hsl) / 0.3);
+    --shadow-subtle: 0 2px 8px -2px hsl(33 37 41 / 0.06);
+
+    /* Enhanced transitions and timing - Point 4 */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-quick: all 0.2s ease-out;
+    --transition-slow: all 0.5s ease-in-out;
+  }
+
+  .dark {
+    --background: 18 18 18; /* Dark background */
+    --foreground: 255 255 255;
+    --card: 32 32 32;
+    --card-foreground: 255 255 255;
+    --popover: 32 32 32;
+    --popover-foreground: 255 255 255;
+    --primary: 0 0 104; /* Primary Navy Blue #000068 - Brand Color */
+    --primary-foreground: 255 255 255;
+    --primary-light: 0 0 128;
+    --secondary: 48 48 48;
+    --secondary-foreground: 255 255 255;
+    --muted: 42 42 42;
+    --muted-foreground: 163 163 163;
+    --accent: 246 139 30; /* Orange #F68B1E - Promotional Highlights */
+    --accent-foreground: 255 255 255;
+    --destructive: 211 47 47; /* Red #D32F2F - Alerts and Urgent Notices */
+    --destructive-foreground: 255 255 255;
+    --border: 217 19% 27%;
+    --input: 48 48 48;
+    --ring: 0 0 104; /* Primary Navy Blue #000068 focus ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  /* Remove yellow backgrounds only - DO NOT override all backgrounds */
+  
+  /* Override any yellow backgrounds specifically */
+  [style*="background-color: yellow"],
+  [style*="background-color: #FFD700"],
+  [style*="background-color: #FFFF00"],
+  [style*="background-color: #FFEB3B"],
+  [style*="background-color: #FFC107"],
+  [style*="background-color: #FF9800"],
+  [style*="background-color: #FFB300"],
+  [style*="background-color: #FFD54F"],
+  [style*="background-color: #FFE082"],
+  [style*="background-color: #FFF59D"],
+  [style*="background-color: #FFF9C4"],
+  [style*="background-color: #FFFDE7"],
+  [style*="background-color: #F4D03F"],
+  [style*="background-color: #F1C40F"],
+  [style*="background-color: #F39C12"],
+  [style*="background-color: #E67E22"],
+  [style*="background: yellow"],
+  [style*="background: #FFD700"],
+  [style*="background: #FFFF00"],
+  [style*="background: #FFEB3B"],
+  [style*="background: #FFC107"],
+  [style*="background: #FF9800"],
+  [style*="background: #FFB300"],
+  [style*="background: #FFD54F"],
+  [style*="background: #FFE082"],
+  [style*="background: #FFF59D"],
+  [style*="background: #FFF9C4"],
+  [style*="background: #FFFDE7"],
+  [style*="background: #F4D03F"],
+  [style*="background: #F1C40F"],
+  [style*="background: #F39C12"],
+  [style*="background: #E67E22"] {
+    background-color: white !important;
+    background: white !important;
+  }
+  
+  /* Override any CSS custom properties that might be yellow */
+  [style*="background-color: var(--yellow)"],
+  [style*="background: var(--yellow)"] {
+    background-color: white !important;
+    background: white !important;
+  }
+  
+  /* Override any Tailwind yellow classes */
+  .bg-yellow-50, .bg-yellow-100, .bg-yellow-200, .bg-yellow-300, 
+  .bg-yellow-400, .bg-yellow-500, .bg-yellow-600, .bg-yellow-700, 
+  .bg-yellow-800, .bg-yellow-900 {
+    background-color: white !important;
+  }
+  
+  /* Override any other potential yellow backgrounds */
+  .bg-amber-50, .bg-amber-100, .bg-amber-200, .bg-amber-300,
+  .bg-amber-400, .bg-amber-500, .bg-amber-600, .bg-amber-700,
+  .bg-amber-800, .bg-amber-900 {
+    background-color: white !important;
+  }
+  
+  /* CRITICAL: Add comprehensive yellow background removal for any element */
+  div[style*="yellow"],
+  section[style*="yellow"],
+  main[style*="yellow"],
+  article[style*="yellow"],
+  aside[style*="yellow"],
+  header[style*="yellow"],
+  footer[style*="yellow"],
+  nav[style*="yellow"] {
+    background-color: white !important;
+    background: white !important;
+  }
+  
+  /* Override any CSS classes that might contain yellow */
+  [class*="yellow"],
+  [class*="amber"] {
+    background-color: white !important;
+  }
+  
+  /* Force override any yellow backgrounds from external sources */
+  *[style*="background"] {
+    background-color: white !important;
+  }
+  
+  /* Override any CSS custom properties */
+  :root {
+    --yellow: white !important;
+    --amber: white !important;
+  }
+  
+  /* FORCE white background for page - premium grocery theme */
+  body, html, #root {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+  }
+  
+  /* Force all main containers to use white background */
+  .min-h-screen {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+  }
+  
+  /* Remove all focus outlines and rings */
+  *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+  
+  *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+  
+  /* Remove focus rings from all interactive elements */
+  input:focus,
+  textarea:focus,
+  select:focus,
+  button:focus,
+  a:focus,
+  [role="button"]:focus,
+  [tabindex]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+  
+  /* Remove focus rings from navigation elements */
+  nav:focus,
+  .nav-item:focus,
+  .navigation:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Remove focus rings from bottom navigation */
+  .bottom-nav:focus,
+  .bottom-nav-item:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Additional comprehensive focus removal */
+  *:focus,
+  *:focus-visible,
+  *:focus-within {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+    ring: none !important;
+    ring-color: transparent !important;
+    ring-width: 0 !important;
+  }
+  
+  /* Remove any remaining focus indicators */
+  button:focus,
+  input:focus,
+  a:focus,
+  div:focus,
+  span:focus,
+  [tabindex]:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+  
+  /* Remove mobile tap highlights */
+  * {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-focus-ring-color: transparent !important;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Custom Scrollbar Styling - Remove Yellow Colors */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c0c0c0;
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: #f5f5f5;
+  }
+
+  /* Firefox Scrollbar Styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #e0e0e0 #f5f5f5;
+  }
+
+  /* Remove any yellow scrollbar colors */
+  *::-webkit-scrollbar-thumb {
+    background: #e0e0e0 !important;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f5f5f5 !important;
+  }
+
+  /* Ensure no yellow colors in scrollbars */
+  html, body {
+    scrollbar-color: #e0e0e0 #f5f5f5;
+  }
+
+  /* Premium text selection styling - Deep Blue/Purple */
+  ::selection {
+    background: #EC4899;
+    color: white;
+  }
+
+  ::-moz-selection {
+    background: #EC4899;
+    color: white;
+  }
+
+  /* Premium focus outlines - Deep Blue/Purple */
+  *:focus {
+    outline: 2px solid #EC4899;
+    outline-offset: 2px;
+  }
+
+  /* Remove yellow tap highlights on mobile */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Additional scrollbar overrides to prevent yellow colors */
+  ::-webkit-scrollbar-thumb:active {
+    background: #c0c0c0 !important;
+  }
+
+  ::-webkit-scrollbar-thumb:focus {
+    background: #e0e0e0 !important;
+  }
+
+  /* Remove any potential yellow scrollbar colors from all elements */
+  div::-webkit-scrollbar-thumb,
+  section::-webkit-scrollbar-thumb,
+  main::-webkit-scrollbar-thumb,
+  aside::-webkit-scrollbar-thumb {
+    background: #e0e0e0 !important;
+  }
+
+  div::-webkit-scrollbar-track,
+  section::-webkit-scrollbar-track,
+  main::-webkit-scrollbar-track,
+  aside::-webkit-scrollbar-track {
+    background: #f5f5f5 !important;
+  }
+
+  /* Ensure no yellow colors in any scrollable containers */
+  .scroll-container::-webkit-scrollbar-thumb {
+    background: #e0e0e0 !important;
+  }
+
+  .scroll-container::-webkit-scrollbar-track {
+    background: #f5f5f5 !important;
+  }
+
+  /* Remove any browser default yellow colors */
+  * {
+    scrollbar-color: #e0e0e0 #f5f5f5 !important;
+  }
+
+  /* Eliminate Yellow Overscroll Glow Effect */
+  html {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll glow on all scrollable elements */
+  * {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Specific overscroll behavior for different elements */
+  div, section, main, aside, article {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll glow for horizontal scrolling */
+  .horizontal-scroll {
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll glow for vertical scrolling */
+  .vertical-scroll {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll glow for all scrollable containers */
+  .scroll-container {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove any potential yellow overscroll colors */
+  *::-webkit-scrollbar {
+    background: transparent;
+  }
+
+  /* Ensure no glow effects on scroll */
+  * {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+  }
+
+  /* Remove any browser default overscroll effects */
+  html, body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Remove any potential yellow glow from scroll events */
+  *:focus {
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Remove any yellow glow from touch events */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  /* Allow text selection where needed */
+  p, h1, h2, h3, h4, h5, h6, span, div {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+  }
+
+  /* Remove any potential yellow glow from input elements */
+  input, textarea, select {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* Remove any yellow glow from buttons */
+  button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  /* Additional overscroll removal for specific scenarios */
+  .no-overscroll {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .no-overscroll-x {
+    overscroll-behavior-x: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .no-overscroll-y {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove any potential yellow glow from scroll containers */
+  .scroll-view {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Remove overscroll from carousel and slider elements */
+  .carousel, .slider, .swiper {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll from list containers */
+  .list-container, .product-grid, .category-grid {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll from modal and overlay elements */
+  .modal, .overlay, .dialog {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove overscroll from navigation elements */
+  .nav-container, .sidebar, .drawer {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Remove any potential yellow glow from all interactive elements */
+  a, button, input, textarea, select, [role="button"], [tabindex] {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  /* Ensure no yellow glow on mobile devices */
+  @media (max-width: 768px) {
+    * {
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+
+  /* Remove any potential yellow glow from iOS Safari */
+  @supports (-webkit-touch-callout: none) {
+    * {
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+
+  /* Scrollbar Hide Utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    /* Prevent scroll blocking on mobile */
+    overscroll-behavior: contain;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+  
+  /* Enhanced scrolling for mobile */
+  .mobile-scroll-container {
+    overscroll-behavior: contain;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* Prevent scroll blocking */
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  /* Prevent scroll blocking in horizontal containers */
+  .horizontal-scroll {
+    touch-action: pan-x;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    /* Additional properties to prevent scroll blocking */
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+  
+  /* Ensure proper scrolling on mobile devices */
+  html {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    touch-action: manipulation;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.6; /* Point 2: Better readability */
+    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* Enhanced mobile scrolling */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    /* Critical: ensure body can always scroll */
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  /* Enhanced scrolling for the main app container */
+  #root {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    min-height: 100vh;
+    height: auto;
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
+  
+  /* Ensure all scrollable containers work properly */
+  .vertical-scroll-enabled {
+    overscroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Force vertical scrolling to work on main containers */
+  .main-content {
+    touch-action: pan-y;
+    overscroll-behavior: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Prevent horizontal containers from blocking vertical scroll */
+  .horizontal-scroll-container {
+    touch-action: pan-x;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    /* Ensure it doesn't block parent scrolling */
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Force vertical scrolling to always work on main containers */
+  .main-content > * {
+    touch-action: pan-y;
+    overscroll-behavior: auto;
+  }
+  
+  /* Ensure horizontal scroll containers don't interfere with page scroll */
+  .horizontal-scroll {
+    touch-action: pan-x;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    /* Ensure it doesn't block parent scrolling */
+    pointer-events: auto;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    /* Additional mobile optimizations */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-x;
+  }
+  
+  /* Point 2: Typography hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  /* Point 11: Accessibility improvements */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Ensure minimum touch targets - Point 11 */
+  button, [role="button"], input, select, textarea {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+@layer components {
+  /* Animations removed */
+  
+  /* Point 4: Enhanced hover and interaction states */
+  .hover-lift {
+    @apply transition-all duration-300 hover:shadow-floating hover:-translate-y-2 hover:scale-[1.02];
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300 hover:shadow-glow hover:brightness-110;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-105 active:scale-95;
+  }
+  
+  .tap-highlight {
+    @apply transition-all duration-150 active:scale-95 active:brightness-95;
+  }
+  
+  /* Point 9: Button feedback with ripple effect */
+  .ripple-effect {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-white/20 before:rounded-full before:scale-0 before:transition-transform before:duration-300;
+  }
+
+  /* Desktop only - ripple effect on hover */
+  @media (min-width: 769px) {
+    .ripple-effect:hover::before {
+      scale: 4 !important; /* Increased ripple width */
+    }
+  }
+
+  /* Mobile - disable ripple effect */
+  @media (max-width: 768px) {
+    .ripple-effect:hover::before {
+      scale: 0 !important;
+    }
+  }
+  
+  /* Point 1 & 5: Enhanced visual elements */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-primary-light to-primary bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply bg-card/80 backdrop-blur-lg border border-border/30 shadow-elegant;
+  }
+  
+  /* Point 5: Enhanced product cards */
+  .premium-card {
+    @apply bg-card rounded-2xl shadow-card border border-border/40 p-6 hover-lift backdrop-blur-sm;
+    background: linear-gradient(145deg, hsl(var(--card)), hsl(var(--card) / 0.95));
+  }
+  
+  .product-card {
+    @apply bg-card rounded-xl shadow-subtle border border-border/30 p-4 hover-lift cursor-pointer;
+    transition: var(--transition-smooth);
+  }
+  
+  .product-card:hover {
+    @apply shadow-elegant border-primary/20;
+    transform: translateY(-4px) scale(1.02);
+  }
+  
+  /* Point 8: Loading and skeleton states */
+  .skeleton {
+    @apply bg-muted animate-pulse rounded;
+  }
+  
+  .shimmer {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:animate-shimmer;
+  }
+  
+  /* Point 6: Enhanced navigation */
+  .nav-item {
+    @apply relative transition-colors duration-200 before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:bg-primary before:transform before:scale-x-0 before:transition-transform hover:before:scale-x-100;
+  }
+  
+  /* Point 3: Carousel enhancements */
+  .carousel-container {
+    @apply relative rounded-2xl overflow-hidden shadow-elegant;
+  }
+  
+  .carousel-slide {
+    @apply relative bg-gradient-overlay rounded-2xl overflow-hidden;
+  }
+  
+  /* Point 10: Visual hierarchy helpers */
+  .section-spacing {
+    @apply py-8 px-4 lg:py-12 lg:px-6;
+  }
+  
+  .content-container {
+    @apply max-w-7xl mx-auto;
+  }
+  
+  /* Point 13: Consistent UI elements */
+  .floating-action {
+    @apply fixed bottom-6 right-6 z-50 rounded-full shadow-floating hover:shadow-glow tap-highlight ripple-effect;
+  }
+  
+  .search-highlight {
+    @apply bg-accent/20 px-1 rounded font-medium;
+  }
+  
+  /* Point 11: Responsive utilities */
+  .touch-target {
+    @apply min-h-[48px] min-w-[48px] flex items-center justify-center;
+  }
+  
+  .responsive-grid {
+    @apply grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4;
+  }
+  
+  /* Point 1: WCAG compliant focus states */
+  .focus-visible {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  
+  /* 🛒 PREMIUM BLUE/PURPLE COLOR PALETTE UTILITIES - Grocery E-commerce */
+  
+  /* Primary Colors - Pink (STRICT) */
+  .text-primary-blue { color: #FF6DAA; }
+  .bg-primary-blue { background-color: #FF6DAA; }
+  .border-primary-blue { border-color: #FF6DAA; }
+  
+  .text-primary-hover { color: #FF9FC6; }
+  .bg-primary-hover { background-color: #FF9FC6; }
+  .border-primary-hover { border-color: #FF9FC6; }
+  
+  .text-primary-light { color: #FF9FC6; }
+  .bg-primary-light { background-color: #FF9FC6; }
+  .border-primary-light { border-color: #FF9FC6; }
+  
+  .text-primary-dark { color: #FF6DAA; }
+  .bg-primary-dark { background-color: #FF6DAA; }
+  .border-primary-dark { border-color: #FF6DAA; }
+  
+  /* Accent Colors - Red for urgent highlights only */
+  .text-accent-red { color: #DC143C; }
+  .bg-accent-red { background-color: #DC143C; }
+  .border-accent-red { border-color: #DC143C; }
+  
+  /* Background Colors - White & Cream (STRICT) */
+  .bg-page { background-color: #FFFFFF; }
+  .bg-white-soft { background-color: #FFFFFF; }
+  .bg-section { background-color: #FFF7EC; }
+  
+  /* Text Colors - Dark Gray for harmony */
+  .text-primary { color: #1E1E2F; }
+  .text-secondary { color: #6B7280; }
+  .text-muted { color: #9CA3AF; }
+  .text-dark-charcoal { color: #1E1E2F; }
+  
+  /* Semantic Colors */
+  .text-success { color: #22C55E; }
+  .bg-success { background-color: #22C55E; }
+  .text-warning { color: #F59E0B; }
+  .bg-warning { background-color: #F59E0B; }
+  .text-error { color: #B52C22; }
+  .bg-error { background-color: #B52C22; }
+  .text-info { color: #3B82F6; }
+  .bg-info { background-color: #3B82F6; }
+  
+  /* Legacy Support - Map old colors to new Pink theme */
+  .text-brand-green { color: #FF6DAA; }
+  .bg-brand-green { background-color: #FF6DAA; }
+  .border-brand-green { border-color: #FF6DAA; }
+  
+  .text-brand-teal { color: #EC4899; }
+  .bg-brand-teal { background-color: #EC4899; }
+  .border-brand-teal { border-color: #EC4899; }
+  
+  .text-brand-navy { color: #EC4899; }
+  .bg-brand-navy { background-color: #EC4899; }
+  .border-brand-navy { border-color: #EC4899; }
+  
+  .text-primary-green { color: #EC4899; }
+  .bg-primary-green { background-color: #EC4899; }
+  .border-primary-green { border-color: #EC4899; }
+  
+  .text-lighter-teal { color: #F472B6; }
+  .bg-lighter-teal { background-color: #F472B6; }
+  .border-lighter-teal { border-color: #F472B6; }
+  
+  .text-green-light { color: #F472B6; }
+  .bg-green-light { background-color: #F472B6; }
+  .border-green-light { border-color: #F472B6; }
+  
+  .text-orange { color: #B52C22; }
+  .bg-orange { background-color: #B52C22; }
+  .border-orange { border-color: #B52C22; }
+  
+  .text-terracotta { color: #B52C22; }
+  .bg-terracotta { background-color: #B52C22; }
+  .border-terracotta { border-color: #B52C22; }
+  
+  .text-accent-orange { color: #B52C22; }
+  .bg-accent-orange { background-color: #B52C22; }
+  .border-accent-orange { border-color: #B52C22; }
+  
+  .text-golden-amber { color: #F59E0B; }
+  .bg-golden-amber { background-color: #F59E0B; }
+  .border-golden-amber { border-color: #F59E0B; }
+  
+  .text-dark-grey { color: #1E1E2F; }
+  .bg-dark-grey { background-color: #1E1E2F; }
+  .border-dark-grey { border-color: #1E1E2F; }
+  
+  .text-soft-peach { color: #F7F8FB; }
+  .bg-soft-peach { background-color: #F7F8FB; }
+  .border-soft-peach { border-color: #F7F8FB; }
+  
+  .text-warm-cream { color: #FFFFFF; }
+  .bg-warm-cream { background-color: #FFFFFF; }
+  .border-warm-cream { border-color: #FFFFFF; }
+  
+  /* Primary color utilities for consistent theming */
+  .text-primary-color { color: #EC4899; }
+  .bg-primary-color { background-color: #EC4899; }
+  .border-primary-color { border-color: #EC4899; }
+  
+  /* NO GRADIENTS - Solid colors only */
+  .gradient-primary-accent {
+    background: #FF6DAA;
+  }
+  
+  .gradient-primary-light {
+    background: #FF9FC6;
+  }
+  
+  .gradient-section {
+    background: #FFF7EC;
+  }
+  
+  /* Modern AppBar Styles - Pink Theme (NO GRADIENTS) */
+  .appbar-gradient {
+    background: #FF6DAA;
+  }
+  
+  .appbar-glass {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  
+  .search-bar-modern {
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .search-bar-modern:focus-within {
+    box-shadow: 0 8px 30px rgba(236, 72, 153, 0.2);
+    transform: translateY(-1px);
+  }
+  
+  /* Floating cart animation removed */
+  
+  /* Dynamic AppBar Styles */
+  .appbar-collapsed {
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+  }
+  
+  .search-bar-persistent {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .search-bar-persistent:focus-within {
+    box-shadow: 0 8px 30px rgba(0, 0, 104, 0.25);
+    transform: translateY(-1px);
+  }
+  
+  .cart-badge-dynamic {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .appbar-content-smooth {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Performance optimizations for smooth AppBar animations */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-padding {
+    will-change: padding;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  .appbar-smooth {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Optimized animation curves for AppBar */
+  .appbar-ease {
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  
+  .appbar-collapse-smooth {
+    transition: all 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  
+  /* Scroll-driven animation optimizations */
+  .scroll-driven-appbar {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+  }
+  
+  .scroll-driven-content {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+  
+  .scroll-driven-search {
+    will-change: opacity;
+    transform: translateZ(0);
+  }
+  
+  .scroll-driven-fading {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+  
+  .scroll-driven-cart {
+    will-change: transform, top, right;
+    transform: translateZ(0);
+  }
+  
+  /* Premium animation curves */
+  .premium-ease {
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  
+  .premium-ease-in-out {
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+}
+
+/* All keyframe animations removed */
+
+  /* Premium AppBar Animation Optimizations */
+  .will-change-transform {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Premium easing curves for AppBar */
+  .premium-appbar-ease {
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+  
+  .premium-appbar-spring {
+    transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  /* Hardware acceleration for smooth animations */
+  .appbar-hardware-accelerated {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform, opacity;
+  }
+  
+  /* Premium search bar animations - Deep Blue/Purple Theme */
+  .search-bar-premium {
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translateZ(0);
+  }
+  
+  .search-bar-premium:focus-within {
+    box-shadow: 0 8px 30px rgba(236, 72, 153, 0.25);
+    transform: translateY(-1px) translateZ(0);
+  }
+  
+  /* Animations removed */
+  
+  /* Enhanced horizontal scroll handling */
+  .horizontal-scroll-container {
+    overscroll-behavior: contain;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  .horizontal-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Ensure vertical scrolling works properly */
+  .vertical-scroll-enabled {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Enhanced nested scrolling support - NO BLOCKING */
+  .nested-scroll-container {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Ensure the main page can scroll smoothly */
+  body, html {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    touch-action: pan-x pan-y;
+  }
+  
+  /* Prevent scroll interference while allowing nested scrolling */
+  * {
+    overscroll-behavior: none;
+  }
+  
+  /* Allow nested scroll containers to work properly */
+  .nested-scroll-container * {
+    overscroll-behavior: none;
+  }
+  
+  /* Smooth momentum scrolling */
+  .momentum-scroll {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent scroll chaining issues */
+  .scroll-container {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+  }
+  
+  /* Ensure horizontal scroll containers don't block vertical scroll */
+  .horizontal-scroll-container {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Remove any scroll blocking */
+  .no-scroll-block {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Ensure natural scrolling behavior */
+  .natural-scroll {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Prevent any interference with page scrolling */
+  .page-scroll-friendly {
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+  }
+
+  /* Mobile AppBar Styles - Pink Theme (NO GRADIENTS) */
+  .appbar-gradient {
+    background: #FF6DAA;
+    /* Add safe area padding for status bar */
+    padding-top: env(safe-area-inset-top, 0px) !important;
+  }
+
+  .appbar-glass {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(255, 109, 170, 0.95);
+  }
+
+  .search-bar-persistent {
+    background: #FFFFFF !important;
+    border: none !important;
+  }
+
+  /* Mobile bottom navigation shadow */
+  .mobile-nav-shadow {
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Ensure bottom navigation respects safe area */
+  nav[class*="fixed"][class*="bottom-0"] {
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  }
+
+  /* Ensure mobile appbar respects safe area */
+  .mobile-appbar,
+  div[class*="mobile-appbar"] {
+    padding-top: env(safe-area-inset-top, 0px) !important;
+  }
+
+  /* Mobile page padding to account for bottom navigation + safe area */
+  @media (max-width: 768px) {
+    .mobile-page-content {
+      /* Use dynamic footer offset */
+      margin-bottom: var(--footer-offset, 0px);
+      padding-bottom: 8px; /* minimal bottom gap */
+    }
+    
+    .mobile-safe-bottom {
+      /* Safe area for bottom nav + safe area inset */
+      margin-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+
+  /* Critical fix: Prevent horizontal scroll containers from blocking vertical scroll */
+  .horizontal-scroll {
+    touch-action: pan-x !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    /* Prevent any interference with parent scrolling */
+    position: relative;
+    z-index: 1;
+    /* Performance optimizations */
+    will-change: scroll-position !important;
+    transform: translateZ(0) !important; /* Hardware acceleration */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    /* Ensure instant scrolling for responsiveness */
+    scroll-behavior: auto !important;
+  }
+
+/* Redeem button hard overrides */
+.redeem-button {
+  background-color: #1AB6A6 !important;
+  color: #ffffff !important;
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 14px !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  border: none !important;
+  line-height: 32px !important;
+}
+.redeem-default {
+  background-color: #1AB6A6 !important;
+  border-color: #1AB6A6 !important;
+  color: #ffffff !important;
+}
+.redeem-selected {
+  background-color: #1AB6A6 !important;
+  border-color: #1AB6A6 !important;
+  color: #ffffff !important;
+}
+  
+  /* Force main content to always scroll vertically */
+  .main-content {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overscroll-behavior: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-behavior: smooth !important;
+    /* Ensure vertical scrolling is never blocked */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+  
+  /* Specific fix for horizontal containers within main content */
+  .main-content .horizontal-scroll {
+    touch-action: pan-x !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important;
+  }
+  
+  /* Mobile-specific overrides */
+  @media (max-width: 768px) {
+    body {
+      touch-action: pan-y pan-x pinch-zoom !important;
+      overscroll-behavior: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+    }
+    
+    .main-content {
+      touch-action: pan-y !important;
+      overscroll-behavior: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+    }
+    
+    .horizontal-scroll {
+      touch-action: pan-x !important;
+      overscroll-behavior: contain !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+  }
+
+  /* Mobile scrollable class - ensures vertical scrolling works */
+  .mobile-scrollable {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: auto !important;
+    position: relative !important;
+  }
+  
+  /* Force main page to scroll */
+  body, html {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    touch-action: pan-y pan-x pinch-zoom !important;
+  }
+  
+  /* Force horizontal containers to only scroll horizontally */
+  .horizontal-scroll {
+    touch-action: pan-x !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    /* Show scrollbar on desktop for better UX */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+  }
+  
+  /* Desktop scrollbar styling */
+  @media (min-width: 769px) {
+    .horizontal-scroll::-webkit-scrollbar {
+      height: 8px;
+      display: block !important;
+    }
+    
+    .horizontal-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+    
+    .horizontal-scroll::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 4px;
+    }
+    
+    .horizontal-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  /* Mobile specific: Ensure everything allows vertical scroll */
+  @media (max-width: 768px) {
+    * {
+      touch-action: pan-y pan-x pinch-zoom !important;
+    }
+    
+    /* Horizontal containers allow both directions on mobile */
+    .horizontal-scroll {
+      touch-action: pan-x pan-y !important; /* Allow both to let vertical scroll pass through */
+    }
+    
+    body, html {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      touch-action: pan-y pan-x pinch-zoom !important;
+      /* Use min-height instead of height to allow scrolling */
+      min-height: 100vh !important;
+      height: auto !important;
+      position: relative !important;
+    }
+    
+    .main-content, .mobile-scrollable {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      touch-action: pan-y pan-x pinch-zoom !important;
+      -webkit-overflow-scrolling: touch !important;
+      position: relative !important;
+      height: auto !important;
+      min-height: 100vh !important;
+    }
+    
+    /* Ensure scrollable content allows vertical scrolling */
+    .scrollable-content {
+      overflow-y: visible !important;
+      overflow-x: hidden !important;
+      touch-action: pan-y pan-x pinch-zoom !important;
+    }
+  }
+  
+  /* Remove any conflicting styles */
+  .scrollbar-hide {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Remove brown/amber/orange colors from category cards */
+  [class*="category"] [class*="border"],
+  a[href*="category"] [class*="border"],
+  a[href*="category"]:focus,
+  a[href*="category"]:active {
+    border-color: rgb(var(--primary-rgb) / 0.1) !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  a[href*="category"]:hover [class*="border"],
+  a[href*="category"]:focus [class*="border"] {
+    border-color: rgb(var(--primary-rgb) / 0.3) !important;
+  }
+
+  /* Force all input fields to have white backgrounds - no yellow/amber/brown */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="phone"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="color"],
+  textarea,
+  select {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Override ALL input states - focus, active, hover, click, invalid - NO YELLOW/BROWN */
+  input[type="text"]:focus,
+  input[type="text"]:active,
+  input[type="text"]:hover,
+  input[type="text"]:focus-visible,
+  input[type="email"]:focus,
+  input[type="email"]:active,
+  input[type="email"]:hover,
+  input[type="email"]:focus-visible,
+  input[type="tel"]:focus,
+  input[type="tel"]:active,
+  input[type="tel"]:hover,
+  input[type="tel"]:focus-visible,
+  input[type="phone"]:focus,
+  input[type="phone"]:active,
+  input[type="phone"]:hover,
+  input[type="phone"]:focus-visible,
+  input[type="number"]:focus,
+  input[type="number"]:active,
+  input[type="number"]:hover,
+  input[type="number"]:focus-visible,
+  input[type="password"]:focus,
+  input[type="password"]:active,
+  input[type="password"]:hover,
+  input[type="password"]:focus-visible,
+  input[type="search"]:focus,
+  input[type="search"]:active,
+  input[type="search"]:hover,
+  input[type="search"]:focus-visible,
+  input[type="url"]:focus,
+  input[type="url"]:active,
+  input[type="url"]:hover,
+  input[type="url"]:focus-visible,
+  input[type="date"]:focus,
+  input[type="date"]:active,
+  input[type="date"]:hover,
+  input[type="date"]:focus-visible,
+  input[type="time"]:focus,
+  input[type="time"]:active,
+  input[type="time"]:hover,
+  input[type="time"]:focus-visible,
+  input[type="datetime-local"]:focus,
+  input[type="datetime-local"]:active,
+  input[type="datetime-local"]:hover,
+  input[type="datetime-local"]:focus-visible,
+  textarea:focus,
+  textarea:active,
+  textarea:hover,
+  textarea:focus-visible,
+  select:focus,
+  select:active,
+  select:hover,
+  select:focus-visible {
+    background-color: white !important;
+    background: white !important;
+    -webkit-box-shadow: 0 0 0 0 white inset !important;
+    box-shadow: 0 0 0 0 white inset !important;
+  }
+
+  /* Override invalid/error states - NO YELLOW/BROWN */
+  input:invalid,
+  input:invalid:focus,
+  input:invalid:active,
+  input:invalid:hover,
+  textarea:invalid,
+  textarea:invalid:focus,
+  textarea:invalid:active,
+  textarea:invalid:hover,
+  select:invalid,
+  select:invalid:focus,
+  select:invalid:active,
+  select:invalid:hover {
+    background-color: white !important;
+    background: white !important;
+    -webkit-box-shadow: 0 0 0 0 white inset !important;
+    box-shadow: 0 0 0 0 white inset !important;
+  }
+
+  /* Override browser autofill background colors (yellow/amber/brown) - ALL STATES */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  input:-webkit-autofill:focus-visible,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  textarea:-webkit-autofill:active,
+  textarea:-webkit-autofill:focus-visible,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus,
+  select:-webkit-autofill:active,
+  select:-webkit-autofill:focus-visible {
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    -webkit-text-fill-color: #1E1E2F !important;
+    background-color: white !important;
+    background: white !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+    color: #1E1E2F !important;
+  }
+
+  /* Firefox autofill override - ALL STATES */
+  input:-moz-autofill,
+  input:-moz-autofill:hover,
+  input:-moz-autofill:focus,
+  input:-moz-autofill:active,
+  textarea:-moz-autofill,
+  textarea:-moz-autofill:hover,
+  textarea:-moz-autofill:focus,
+  textarea:-moz-autofill:active,
+  select:-moz-autofill,
+  select:-moz-autofill:hover,
+  select:-moz-autofill:focus,
+  select:-moz-autofill:active {
+    background-color: white !important;
+    background: white !important;
+    color: #1E1E2F !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+  }
+
+  /* Override any inline styles or dynamic styles that might add yellow/brown */
+  input[style*="background"],
+  textarea[style*="background"],
+  select[style*="background"] {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Ensure checkout page inputs are white */
+  .checkout input,
+  [class*="checkout"] input {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Override ANY input field regardless of class, ID, or parent - NO YELLOW/BROWN */
+  input,
+  textarea,
+  select {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  input:focus,
+  input:active,
+  input:hover,
+  input:focus-visible,
+  input:focus-within,
+  textarea:focus,
+  textarea:active,
+  textarea:hover,
+  textarea:focus-visible,
+  textarea:focus-within,
+  select:focus,
+  select:active,
+  select:hover,
+  select:focus-visible,
+  select:focus-within {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Override any input inside any container - comprehensive coverage */
+  * input,
+  * textarea,
+  * select,
+  form input,
+  form textarea,
+  form select,
+  div input,
+  div textarea,
+  div select,
+  section input,
+  section textarea,
+  section select {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  * input:focus,
+  * input:active,
+  * input:hover,
+  * textarea:focus,
+  * textarea:active,
+  * textarea:hover,
+  * select:focus,
+  * select:active,
+  * select:hover {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Remove any yellow/brown box-shadow that might appear on focus/click */
+  input:focus,
+  input:active,
+  input:hover,
+  textarea:focus,
+  textarea:active,
+  textarea:hover,
+  select:focus,
+  select:active,
+  select:hover {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Override any yellow/brown background from browser validation styles */
+  input:valid,
+  input:invalid,
+  input:required,
+  input:optional,
+  textarea:valid,
+  textarea:invalid,
+  textarea:required,
+  textarea:optional {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Force all input borders to use neutral gray - NO BROWN/YELLOW BORDERS */
+  input,
+  textarea,
+  select {
+    border-color: #D0D5DD !important;
+  }
+
+  input:focus,
+  input:active,
+  input:hover,
+  textarea:focus,
+  textarea:active,
+  textarea:hover,
+  select:focus,
+  select:active,
+  select:hover {
+    border-color: #EC4899 !important;
+  }
+
+  /* Override any brown/yellow/amber border colors from inline styles */
+  input[style*="border"],
+  textarea[style*="border"],
+  select[style*="border"] {
+    border-color: #D0D5DD !important;
+  }
+
+  input:focus[style*="border"],
+  textarea:focus[style*="border"],
+  select:focus[style*="border"] {
+    border-color: #EC4899 !important;
+  }
+
+  /* Override Tailwind gray classes that might appear brown */
+  .border-gray-300,
+  .border-gray-200,
+  .border-gray-400,
+  input.border-gray-300,
+  input.border-gray-200,
+  input.border-gray-400,
+  div.border-gray-300 input,
+  div.border-gray-200 input {
+    border-color: #D0D5DD !important;
+  }
+
+  input.border-gray-300:focus,
+  input.border-gray-200:focus,
+  input.border-gray-400:focus,
+  div.border-gray-300 input:focus,
+  div.border-gray-200 input:focus {
+    border-color: #EC4899 !important;
+  }
+
+  /* Override specific border colors that might appear brown */
+  [style*="borderColor: #D1D5DB"],
+  [style*="border-color: #D1D5DB"],
+  [style*="borderColor: '#D1D5DB'"],
+  [style*="border-color: '#D1D5DB'"],
+  [style*="borderColor: #E5E7EB"],
+  [style*="border-color: #E5E7EB"],
+  [style*="borderColor: '#E5E7EB'"],
+  [style*="border-color: '#E5E7EB'"] {
+    border-color: #D0D5DD !important;
+  }
+
+  .bg-primary {
+    background-color: var(--primary);
+  }
+
+  .hover\:bg-primary:hover {
+    background-color: var(--primary);
+  }
+
+  .bg-primary-hover {
+    background-color: var(--primary-hover);
+  }
+
+  .hover\:bg-primary-hover:hover {
+    background-color: var(--primary-hover);
+  }
+
+  .text-white {
+    color: var(--white);
+  }
+
+  .hover\:text-white:hover {
+    color: var(--white);
+  }
+
+  .border-primary {
+    border-color: var(--primary);
+  }
+
+  /* Force outline buttons to have white backgrounds - no yellow */
+  /* Remove forced overrides for outline buttons to allow component variants to control styling */
+
+  /* Ensure Edit button and similar outline buttons are white */
+  button:has(svg[class*="Edit"]),
+  button:has([class*="Edit"]) {
+    background-color: white !important;
+    background: white !important;
+  }
+
+  /* Login/Signup form placeholder colors */
+  input::placeholder {
+    color: #8A8A8A !important;
+    opacity: 1;
+  }
+
+  input::-webkit-input-placeholder {
+    color: #8A8A8A !important;
+    opacity: 1;
+  }
+
+  input::-moz-placeholder {
+    color: #8A8A8A !important;
+    opacity: 1;
+  }
+
+  input:-ms-input-placeholder {
+    color: #8A8A8A !important;
+    opacity: 1;
+  }
+
+  /* Global input text color - black */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="number"],
+  input[type="tel"],
+  textarea {
+    color: #111827 !important; /* Black text color */
+  }
+
+  input[type="text"]:not(:placeholder-shown),
+  input[type="email"]:not(:placeholder-shown),
+  input[type="password"]:not(:placeholder-shown),
+  input[type="search"]:not(:placeholder-shown),
+  input[type="number"]:not(:placeholder-shown),
+  input[type="tel"]:not(:placeholder-shown),
+  textarea:not(:placeholder-shown) {
+    color: #111827 !important; /* Black text color when typed */
+  }
+
+  /* Critical fix: Ensure main page container allows scrolling */
+  #root {
+    min-height: 100vh;
+    height: auto;
+    overflow-y: visible;
+    overflow-x: hidden;
+  }
+
+  /* Ensure main content wrapper doesn't block scrolling */
+  main {
+    min-height: 100vh;
+    height: auto;
+    overflow-y: visible;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Ensure main element allows sticky positioning for search bar */
+  main:has(.sticky-search-bar-container) {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    overflow-x: visible !important;
+  }
+
+  /* Fix for pages with fixed bottom navigation */
+  @media (max-width: 768px) {
+    main {
+      padding-bottom: 80px; /* Space for fixed bottom nav */
+    }
+  }
+
+  /* Force sticky search bar positioning - override any conflicting styles */
+  .sticky-search-bar-container {
+    position: -webkit-sticky !important; /* Safari support */
+    position: sticky !important;
+    top: var(--desktop-header-height, 80px) !important;
+    z-index: 40 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Remove any gap between header and search bar */
+  header.desktop-navigation + .sticky-search-bar-container,
+  header[class*="desktop-navigation"] + .sticky-search-bar-container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Remove margin/padding from parent containers that might create gaps */
+  div:has(header.desktop-navigation) + div:has(.sticky-search-bar-container),
+  div:has(header[class*="desktop-navigation"]) + div:has(.sticky-search-bar-container),
+  header.desktop-navigation ~ .sticky-search-bar-container,
+  header[class*="desktop-navigation"] ~ .sticky-search-bar-container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+  
+  /* Remove any spacing from ResponsivePage that might create gaps */
+  .ResponsivePage:has(header.desktop-navigation):has(.sticky-search-bar-container) > *:first-child:not(header),
+  .ResponsivePage:has(header[class*="desktop-navigation"]):has(.sticky-search-bar-container) > *:first-child:not(header) {
+    margin-top: 0 !important;
+  }
+  
+  /* Ensure search bar is directly attached to header */
+  header.desktop-navigation + *,
+  header[class*="desktop-navigation"] + * {
+    margin-top: 0 !important;
+  }
+  
+  /* Ensure seamless connection between header and search bar */
+  header.desktop-navigation {
+    border-bottom: 1px solid #EC4899 !important;
+  }
+  
+  .sticky-search-bar-container {
+    border-top: none !important;
+    border-bottom: 1px solid #E5E7EB !important;
+  }
+  
+  /* Remove any gap by ensuring header bottom and search bar top align */
+  header.desktop-navigation ~ .sticky-search-bar-container {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    top: var(--desktop-header-height, 80px) !important;
+  }
+
+  /* Ensure no parent overflow blocks sticky positioning */
+  main:has(.sticky-search-bar-container),
+  div:has(.sticky-search-bar-container),
+  section:has(.sticky-search-bar-container),
+  .ResponsivePage:has(.sticky-search-bar-container) {
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    overflow: visible !important;
+  }
+
+  /* Force sticky behavior even if parent has overflow - broader selector */
+  *:has(.sticky-search-bar-container) {
+    overflow: visible !important;
+  }
+
+  /* Ensure ResponsivePage main element allows sticky */
+  main:has(.sticky-search-bar-container) {
+    overflow: visible !important;
+    position: relative !important;
+  }
+  
+  /* Desktop Navigation - ensure visibility on desktop only */
+  @media (min-width: 768px) {
+    /* Show desktop navigation header */
+    header.desktop-navigation,
+    header[class*="desktop-navigation"] {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    /* Hide MobileAppBar on desktop */
+    .mobile-appbar,
+    div[class*="mobile-appbar"],
+    div.mobile-appbar {
+      display: none !important;
+      visibility: hidden !important;
+    }
+  }
+  
+  @media (max-width: 767px) {
+    /* Hide desktop navigation on mobile */
+    header.desktop-navigation,
+    header[class*="desktop-navigation"] {
+      display: none !important;
+      visibility: hidden !important;
+    }
+    
+    /* Show MobileAppBar on mobile */
+    .mobile-appbar,
+    div[class*="mobile-appbar"],
+    div.mobile-appbar {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+  }
+  
+  /* Categories page header - force to top with no gaps, ensure no data blocking */
+  header.bg-primary-blue,
+  header[class*="bg-primary-blue"] {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  /* Categories header - desktop only */
+  @media (max-width: 767px) {
+    header.bg-primary-blue,
+    header[class*="bg-primary-blue"] {
+      display: none !important;
+      visibility: hidden !important;
+    }
+  }
+  
+  /* Ensure content below Categories header is not blocked */
+  @media (max-width: 767px) {
+    .categories-content,
+    div:has(header.bg-primary-blue) + div {
+      padding-top: 80px !important;
+      margin-top: 0 !important;
+    }
+  }
+  
+  @media (min-width: 768px) {
+  .categories-content,
+  div:has(header.bg-primary-blue) + div {
+    padding-top: 1.5rem !important;
+    margin-top: 0 !important;
+    }
+  }
+  
+  /* Breadcrumb headers - force to top with no gaps, remove white space */
+  /* This applies to all breadcrumb headers: checkout, cart, orders, products, product-detail */
+  /* ONLY on desktop (min-width: 768px) */
+  @media (min-width: 768px) {
+    header.breadcrumb-header,
+    header[class*="breadcrumb-header"],
+    header.checkout-header,
+    header.cart-header,
+    header.orders-header,
+    header.products-header,
+    header.product-detail-header {
+      position: sticky !important;
+      top: var(--desktop-header-height, 80px) !important;
+      z-index: 40 !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      padding-top: 0 !important;
+      width: 100% !important;
+      left: 0 !important;
+      right: 0 !important;
+      background: white !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    /* Remove white space above breadcrumb headers on desktop */
+    div:has(header.breadcrumb-header),
+    div:has(header.breadcrumb-header) > *:first-child,
+    div:has(header.checkout-header),
+    div:has(header.cart-header),
+    div:has(header.orders-header),
+    div:has(header.products-header),
+    div:has(header.product-detail-header) {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+  }
+  
+  /* Hide breadcrumb headers on mobile */
+  @media (max-width: 767px) {
+    header.breadcrumb-header,
+    header[class*="breadcrumb-header"],
+    header.checkout-header,
+    header.cart-header,
+    header.orders-header,
+    header.products-header,
+    header.product-detail-header {
+      display: none !important;
+      visibility: hidden !important;
+    }
+  }
+  
+  /* Ensure webpage content starts after breadcrumb headers */
+  /* Content padding is handled inline in each component */
+
+  /* Order Success Page - Remove all top spacing */
+  .order-success-page {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Order Success Page Header - Force to top */
+  .order-success-page > header {
+    top: 0 !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    position: sticky !important;
+  }
+
+  /* Order Success Page Header inner div */
+  .order-success-page > header > div {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 1rem !important;
+  }
+
+  /* Order Success Page Main Content - Remove top padding */
+  .order-success-page > div:not(header) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Order Success Page - Remove any spacing from ResponsivePage wrapper */
+  div:has(.order-success-page) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Order Success Page - Remove spacing from parent containers */
+  .ResponsivePage:has(.order-success-page) {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .ResponsivePage:has(.order-success-page) > * {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Premium Button Hover Animation - Blue Theme */
+  .premium-button {
+    cursor: pointer;
+    position: relative;
+    color: #EC4899 !important;
+    border: 2px solid #EC4899 !important;
+    border-radius: 34px !important;
+    background-color: transparent !important;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1) !important;
+    overflow: hidden;
+  }
+
+  .premium-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 120px !important; /* Increased from 70px */
+    height: 120px !important; /* Increased from 70px */
+    border-radius: inherit;
+    scale: 0;
+    z-index: -1;
+    background-color: #EC4899;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1) !important;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .premium-button:hover::before {
+      scale: 4 !important; /* Increased from 3 for wider ripple */
+    }
+
+    .premium-button:hover {
+      color: #FFFFFF !important; /* White text on blue ripple background */
+      scale: 1.1 !important;
+      box-shadow: 0 0px 20px rgba(236, 72, 153, 0.4) !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .premium-button:hover::before {
+      scale: 0 !important;
+    }
+
+    .premium-button:hover {
+      color: #EC4899 !important;
+      scale: 1 !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .premium-button:active {
+    scale: 1 !important;
+  }
+
+  /* For buttons with white text on blue background */
+  .premium-button-filled {
+    cursor: pointer;
+    position: relative;
+    color: #FFFFFF !important;
+    border: 2px solid #EC4899 !important;
+    border-radius: 34px !important;
+    background-color: #EC4899 !important;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1) !important;
+    overflow: hidden;
+  }
+
+  .premium-button-filled::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 120px !important; /* Increased from 70px */
+    height: 120px !important; /* Increased from 70px */
+    border-radius: inherit;
+    scale: 0;
+    z-index: -1;
+    background-color: #F472B6;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1) !important;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .premium-button-filled:hover::before {
+      scale: 4 !important; /* Increased from 3 for wider ripple */
+    }
+
+    .premium-button-filled:hover {
+      color: #FFFFFF !important;
+      scale: 1.1 !important;
+      box-shadow: 0 0px 20px rgba(236, 72, 153, 0.4) !important;
+      border-color: #F472B6 !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .premium-button-filled:hover::before {
+      scale: 0 !important;
+    }
+
+    .premium-button-filled:hover {
+      color: #FFFFFF !important;
+      scale: 1 !important;
+      box-shadow: none !important;
+      border-color: #EC4899 !important;
+    }
+  }
+
+  .premium-button-filled:active {
+    scale: 1 !important;
+  }
+
+  .view-orders-button {
+    border-radius: 999px !important;
+    border: 2px solid #EC4899 !important;
+    background: linear-gradient(135deg, #ffffff, #eef0ff) !important;
+    color: #1F1F7A !important;
+    padding: 0.65rem 1.8rem !important;
+    font-weight: 600 !important;
+    position: relative;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1) !important;
+    overflow: hidden;
+    isolation: isolate;
+    box-shadow: 0 12px 24px rgba(236, 72, 153, 0.15) !important;
+  }
+
+  .view-orders-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: inherit;
+    scale: 0;
+    z-index: -1;
+    background: radial-gradient(circle, rgba(76, 86, 196, 0.35), rgba(236, 72, 153, 0.05));
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .view-orders-button:hover::before {
+    scale: 3;
+    opacity: 0.9;
+  }
+
+  .view-orders-button:hover {
+    color: #ffffff !important;
+    border-color: #F472B6 !important;
+    background: linear-gradient(135deg, #EC4899, #F472B6) !important;
+    box-shadow: 0 16px 30px rgba(236, 72, 153, 0.35) !important;
+    transform: translateY(-1px);
+  }
+
+  .view-orders-button:active {
+    transform: scale(0.98);
+  }
+
+  .view-orders-button svg {
+    transition: transform 0.25s ease, color 0.25s ease;
+    color: inherit !important;
+  }
+
+  .view-orders-button:hover svg {
+    transform: translateX(3px);
+    color: #ffffff !important;
+  }
+
+  .view-orders-button--solid {
+    background: linear-gradient(135deg, #EC4899, #F472B6) !important;
+    color: #ffffff !important;
+    border-color: #EC4899 !important;
+    box-shadow: 0 16px 32px rgba(236, 72, 153, 0.35) !important;
+  }
+
+  .view-orders-button--solid::before {
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.45), rgba(244, 114, 182, 0.15));
+  }
+
+  .view-orders-button--solid:hover {
+    border-color: #F472B6 !important;
+    box-shadow: 0 18px 34px rgba(236, 72, 153, 0.45) !important;
+  }
+
+  /* Responsive adjustments for mobile */
+  @media (max-width: 767px) {
+    .premium-button,
+    .premium-button-filled {
+      font-size: 14px !important;
+    }
+    
+    .premium-button:hover,
+    .premium-button-filled:hover {
+      scale: 1.05;
+    }
+  }
+
+  /* Login Button Animation - Slide Up Effect */
+  .login-button-animated {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #18181a;
+    color: #18181a;
+    display: inline-block;
+    font-size: 15px;
+    line-height: 15px;
+    padding: 18px 18px 17px;
+    text-decoration: none;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    border-radius: 12px;
+  }
+
+  .login-button-animated span:first-child {
+    position: relative;
+    transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+    z-index: 10;
+  }
+
+  .login-button-animated span:last-child {
+    color: white;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+    z-index: 100;
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translateY(225%) translateX(-50%);
+    height: 14px;
+    line-height: 13px;
+  }
+
+  .login-button-animated:after {
+    content: "";
+    position: absolute;
+    bottom: -50%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #EC4899;
+    transform-origin: bottom center;
+    transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+    transform: skewY(9.3deg) scaleY(0);
+    z-index: 50;
+  }
+
+  .login-button-animated:hover:after {
+    transform-origin: bottom center;
+    transform: skewY(9.3deg) scaleY(2);
+  }
+
+  .login-button-animated:hover span:last-child {
+    transform: translateX(-50%) translateY(-50%);
+    opacity: 1;
+    transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+  }
+
+  /* When button shows "Thanks" - keep the animated state */
+  .login-button-animated.show-thanks:after {
+    transform-origin: bottom center;
+    transform: skewY(9.3deg) scaleY(2);
+  }
+
+  .login-button-animated.show-thanks span:first-child {
+    opacity: 0;
+  }
+
+  .login-button-animated.show-thanks span:last-child {
+    transform: translateX(-50%) translateY(-50%);
+    opacity: 1;
+  }
+
+  /* Custom Toggle Switch Animation - Blue Theme */
+  .bauble_box {
+    position: relative;
+    display: inline-block;
+  }
+
+  .bauble_box .bauble_label {
+    background: #D1D5DB;
+    background-position: 62px 5px;
+    background-repeat: no-repeat;
+    background-size: auto 5px;
+    border: 0;
+    border-radius: 50px;
+    box-shadow: inset 0 10px 20px rgba(0,0,0,.2), 0 -1px 0px rgba(0,0,0,.1), inset 0 -1px 0px #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0;
+    height: 40px;
+    position: relative;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+    width: 90px;
+  }
+
+  .bauble_box .bauble_label:before {
+    background-color: rgba(255,255,255,.2);
+    background-position: 0 0;
+    background-repeat: repeat;
+    background-size: 30% auto;
+    border-radius: 50%;
+    box-shadow: inset 0 -5px 25px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.3);
+    content: '';
+    display: block;
+    height: 30px;
+    left: 5px;
+    position: absolute;
+    top: 6px;
+    -webkit-transition: all 500ms ease;
+    transition: all 500ms ease;
+    width: 30px;
+    z-index: 2;
+    background: #FFFFFF;
+  }
+
+  .bauble_box input.bauble_input {
+    opacity: 0;
+    z-index: 0;
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  /* Checked State - Blue Theme */
+  .bauble_box input.bauble_input:checked + .bauble_label {
+    background-color: #EC4899;
+    box-shadow: inset 0 10px 20px rgba(0,0,0,.2), 0 -1px 0px rgba(0,0,0,.1), inset 0 -1px 0px #fff;
+  }
+
+  .bauble_box input.bauble_input:checked + .bauble_label:before {
+    background-position: 150% 0;
+    box-shadow: inset 0 -5px 25px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.3);
+    left: calc(100% - 35px);
+    background: #FFFFFF;
+  }
+
+  /* Truck Loader Animation - Highest Priority */
+  .loader {
+    width: fit-content !important;
+    height: fit-content !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .truckWrapper {
+    width: 200px !important;
+    height: 100px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    overflow-x: hidden !important;
+  }
+
+  /* truck upper body */
+  .truckBody {
+    width: 130px !important;
+    height: fit-content !important;
+    margin-bottom: 6px !important;
+    /* Animation removed */
+  }
+
+  /* truck's tires */
+  .truckTires {
+    width: 130px !important;
+    height: fit-content !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0px 10px 0px 15px !important;
+    position: absolute !important;
+    bottom: 0 !important;
+  }
+
+  .truckTires svg {
+    width: 24px !important;
+  }
+
+  .road {
+    width: 100% !important;
+    height: 1.5px !important;
+    background-color: #282828 !important;
+    position: relative !important;
+    bottom: 0 !important;
+    align-self: flex-end !important;
+    border-radius: 3px !important;
+  }
+
+  .road::before {
+    content: "" !important;
+    position: absolute !important;
+    width: 20px !important;
+    height: 100% !important;
+    background-color: #282828 !important;
+    right: -50% !important;
+    border-radius: 3px !important;
+    /* Animation removed */
+    border-left: 10px solid white !important;
+  }
+
+  .road::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 10px !important;
+    height: 100% !important;
+    background-color: #282828 !important;
+    right: -65% !important;
+    border-radius: 3px !important;
+    /* Animation removed */
+    border-left: 4px solid white !important;
+  }
+
+  .lampPost {
+    position: absolute !important;
+    bottom: 0 !important;
+    right: -90% !important;
+    height: 90px !important;
+    /* Animation removed */
+  }
+
+  /* Override all hover effects for Place Order button */
+  button[type="button"]:has(.loader),
+  button[type="button"]:has(.truckWrapper) {
+    background-color: #1A2FA3 !important;
+    transform: none !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    transition: none !important;
+  }
+
+  button[type="button"]:has(.loader):hover,
+  button[type="button"]:has(.truckWrapper):hover,
+  button[type="button"]:has(.loader):active,
+  button[type="button"]:has(.truckWrapper):active {
+    background-color: #1A2FA3 !important;
+    transform: none !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    scale: 1 !important;
+  }
+
+  button[type="button"]:has(.loader)::before,
+  button[type="button"]:has(.loader)::after,
+  button[type="button"]:has(.truckWrapper)::before,
+  button[type="button"]:has(.truckWrapper)::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Premium Button Hover Animations - Sliding Door Effect */
+  /* 1. Proceed to Checkout Button */
+  .btn-checkout {
+    background: #fff;
+    border: 2px solid #1A2FA3;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    width: 200px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: skew(-21deg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-checkout span {
+    display: inline-block;
+    transform: skew(21deg);
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-checkout::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    left: 0;
+    background: #1A2FA3;
+    opacity: 0;
+    z-index: 1;
+    transition: all 0.5s;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .btn-checkout:hover {
+      color: #fff !important;
+    }
+
+    .btn-checkout:hover::before {
+      left: 0 !important;
+      right: 0 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .btn-checkout:hover {
+      color: inherit !important;
+    }
+
+    .btn-checkout:hover::before {
+      left: 0 !important;
+      right: 100% !important;
+      opacity: 0 !important;
+    }
+  }
+
+  /* 2. Place Order Button */
+  .btn-place-order {
+    background: #fff;
+    border: 2px solid #16298C;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    width: 280px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: skew(-21deg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-place-order span {
+    display: inline-block;
+    transform: skew(21deg);
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-place-order::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    left: 0;
+    background: #16298C;
+    opacity: 0;
+    z-index: 1;
+    transition: all 0.5s;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .btn-place-order:hover {
+      color: #fff !important;
+    }
+
+    .btn-place-order:hover::before {
+      left: 0 !important;
+      right: 0 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .btn-place-order:hover {
+      color: inherit !important;
+    }
+
+    .btn-place-order:hover::before {
+      left: 0 !important;
+      right: 100% !important;
+      opacity: 0 !important;
+    }
+  }
+
+  .btn-place-order.loading-state {
+    transform: none !important;
+  }
+
+  .btn-place-order.loading-state::before {
+    display: none;
+  }
+
+  /* 3. Go to Home Button */
+  .btn-go-home {
+    background: #fff;
+    border: 2px solid #1A2FA3;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    width: 240px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: skew(-21deg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-go-home span {
+    display: inline-block;
+    transform: skew(21deg);
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-go-home::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    left: 0;
+    background: #1A2FA3;
+    opacity: 0;
+    z-index: 1;
+    transition: all 0.5s;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .btn-go-home:hover {
+      color: #fff !important;
+    }
+
+    .btn-go-home:hover::before {
+      left: 0 !important;
+      right: 0 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .btn-go-home:hover {
+      color: inherit !important;
+    }
+
+    .btn-go-home:hover::before {
+      left: 0 !important;
+      right: 100% !important;
+      opacity: 0 !important;
+    }
+  }
+
+  /* 4. View Orders Button */
+  .btn-view-orders {
+    background: #fff;
+    border: 2px solid #16298C;
+    padding: 10px 20px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 600;
+    width: 220px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: skew(-21deg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-view-orders span {
+    display: inline-block;
+    transform: skew(21deg);
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-view-orders::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 100%;
+    left: 0;
+    background: #16298C;
+    opacity: 0;
+    z-index: 1;
+    transition: all 0.5s;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .btn-view-orders:hover {
+      color: #fff !important;
+    }
+
+    .btn-view-orders:hover::before {
+      left: 0 !important;
+      right: 0 !important;
+      opacity: 1 !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .btn-view-orders:hover {
+      color: inherit !important;
+    }
+
+    .btn-view-orders:hover::before {
+      left: 0 !important;
+      right: 100% !important;
+      opacity: 0 !important;
+    }
+  }
+
+  /* ============================================
+     BUBBLES BUTTON EFFECT - For View All & Add New Address
+     Using App Theme Colors (#1A2FA3, #16298C)
+     ============================================ */
+  .btn-bubbles {
+    --c1: #ffffff !important; /* Text color on hover - white */
+    --c2: #1A2FA3 !important; /* Border and bubble color - primary blue */
+    --size-letter: 16px !important;
+    padding: 0.5em 1em !important;
+    font-size: var(--size-letter) !important;
+    background-color: transparent !important;
+    border: calc(var(--size-letter) / 6) solid var(--c2) !important;
+    border-radius: 0.2em !important;
+    cursor: pointer !important;
+    overflow: hidden !important;
+    position: relative !important;
+    transition: 300ms cubic-bezier(0.83, 0, 0.17, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    min-width: auto !important;
+    min-height: auto !important;
+    width: auto !important;
+    height: auto !important;
+  }
+
+  .btn-bubbles > .text {
+    font-weight: 700 !important;
+    color: var(--c2) !important;
+    position: relative !important;
+    z-index: 1 !important;
+    transition: color 700ms cubic-bezier(0.83, 0, 0.17, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .btn-bubbles::before {
+    top: 0 !important;
+    left: 0 !important;
+  }
+
+  .btn-bubbles::after {
+    top: 100% !important;
+    left: 100% !important;
+  }
+
+  .btn-bubbles::before,
+  .btn-bubbles::after {
+    content: "" !important;
+    width: 200% !important; /* Increased from 150% for wider ripple */
+    aspect-ratio: 1/1 !important;
+    scale: 0 !important;
+    transition: 1000ms cubic-bezier(0.76, 0, 0.24, 1) !important;
+    background-color: var(--c2) !important;
+    border-radius: 50% !important;
+    position: absolute !important;
+    translate: -50% -50% !important;
+  }
+
+  /* Desktop only - hover animations */
+  @media (min-width: 769px) {
+    .btn-bubbles:hover > .text {
+      color: var(--c1) !important;
+    }
+
+    .btn-bubbles:hover::before,
+    .btn-bubbles:hover::after {
+      scale: 1.5 !important; /* Increased from 1 for wider ripple */
+    }
+
+    .btn-bubbles:hover svg {
+      color: var(--c1) !important;
+    }
+  }
+
+  /* Mobile - disable hover animations */
+  @media (max-width: 768px) {
+    .btn-bubbles:hover > .text {
+      color: var(--c2) !important;
+    }
+
+    .btn-bubbles:hover::before,
+    .btn-bubbles:hover::after {
+      scale: 0 !important;
+    }
+
+    .btn-bubbles:hover svg {
+      color: inherit !important;
+    }
+  }
+
+  .btn-bubbles:active {
+    scale: 0.98 !important;
+    filter: brightness(0.9) !important;
+  }
+
+  .btn-bubbles svg {
+    position: relative !important;
+    z-index: 1 !important;
+    transition: color 700ms cubic-bezier(0.83, 0, 0.17, 1) !important;
+  }
+
+
+  .btn-bubbles:disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+  }
+
+  .btn-bubbles:disabled:hover > .text {
+    color: var(--c2) !important;
+  }
+
+  .btn-bubbles:disabled:hover::before,
+  .btn-bubbles:disabled:hover::after {
+    scale: 0 !important;
+  }
+
+  /* Variant Card Color Theme - Force app colors with !important */
+  .variant-card-container,
+  div[class*="border-2"][class*="border-[#C2BFFF]"],
+  div[class*="bg-[#EDEBFF]"] {
+    background-color: #EDEBFF !important;
+    border-color: #C2BFFF !important;
+  }
+
+  .variant-card-container h4,
+  div[class*="border-2"][class*="border-[#E7E9FF]"] h4 {
+    color: #1E1E2F !important;
+  }
+
+  .variant-card-container p,
+  div[class*="border-2"][class*="border-[#E7E9FF]"] p {
+    color: #6B7280 !important;
+  }
+
+  .variant-card-container span[class*="font-semibold"],
+  div[class*="border-2"][class*="border-[#E7E9FF]"] span[class*="font-semibold"] {
+    color: #EC4899 !important;
+  }
+
+  .variant-card-container span[class*="text-gray-800"],
+  div[class*="border-2"][class*="border-[#E7E9FF]"] span[class*="text-gray-800"] {
+    color: #1E1E2F !important;
+  }
+
+  /* ============================================
+     PRODUCT CARD & SECTION PRODUCTS COLOR THEME
+     TOP PRIORITY - Override ALL conflicting colors
+     ============================================ */
+  
+  /* Section Description Color - Force app theme */
+  p[class*="text-[#4A90E2]"] {
+    color: #EC4899 !important;
+  }
+
+  /* Product Card Add Button - Override pink to app blue */
+  button[class*="bg-pink-500"],
+  button.bg-pink-500,
+  button[class*="bg-pink"],
+  .unified-product-card button[class*="bg-pink"],
+  .unified-product-card button[class*="bg-pink-500"],
+  button[class*="ADD"],
+  button:has-text("ADD") {
+    background-color: #EC4899 !important;
+    background: #EC4899 !important;
+  }
+
+  button[class*="bg-pink-500"]:hover,
+  button.bg-pink-500:hover,
+  button[class*="bg-pink"]:hover,
+  .unified-product-card button[class*="bg-pink"]:hover,
+  .unified-product-card button[class*="bg-pink-500"]:hover {
+    background-color: #F472B6 !important;
+    background: #F472B6 !important;
+  }
+
+  /* Product Card Quantity Controls - Override pink to app blue */
+  button[class*="bg-pink-500"][class*="w-8"],
+  button[class*="bg-pink-500"][class*="h-8"],
+  button[class*="bg-pink-500"][class*="w-10"],
+  button[class*="bg-pink-500"][class*="h-10"] {
+    background-color: #EC4899 !important;
+    background: #EC4899 !important;
+  }
+
+  button[class*="bg-pink-500"][class*="w-8"]:hover,
+  button[class*="bg-pink-500"][class*="h-8"]:hover,
+  button[class*="bg-pink-500"][class*="w-10"]:hover,
+  button[class*="bg-pink-500"][class*="h-10"]:hover {
+    background-color: #F472B6 !important;
+    background: #F472B6 !important;
+  }
+
+  /* Section Products Background - Force app theme */
+  div[class*="bg-[#F5F6FA]"] {
+    background-color: #F5F6FA !important;
+    background: #F5F6FA !important;
+  }
+
+  /* Product Card Background - Force app theme */
+  div[class*="bg-[#F5F6FA]"][class*="rounded-lg"],
+  .unified-product-card > div[class*="bg-[#F5F6FA]"] {
+    background-color: #F5F6FA !important;
+    background: #F5F6FA !important;
+  }
+
+  /* Override any pink colors in product cards */
+  *[class*="unified-product-card"] button[style*="pink"],
+  *[class*="unified-product-card"] button[style*="Pink"],
+  *[class*="unified-product-card"] *[style*="background-color: pink"],
+  *[class*="unified-product-card"] *[style*="background: pink"],
+  *[class*="unified-product-card"] *[style*="background-color: #EC4899"],
+  *[class*="unified-product-card"] *[style*="background: #EC4899"],
+  *[class*="unified-product-card"] *[style*="background-color: #f472b6"],
+  *[class*="unified-product-card"] *[style*="background: #f472b6"] {
+    background-color: #EC4899 !important;
+    background: #EC4899 !important;
+  }
+
+  /* Override pink in all product-related sections */
+  section[class*="product"] button[class*="pink"],
+  div[class*="product"] button[class*="pink"],
+  [class*="section"] button[class*="pink"],
+  [class*="Products"] button[class*="pink"] {
+    background-color: #EC4899 !important;
+    background: #EC4899 !important;
+  }
+
+  section[class*="product"] button[class*="pink"]:hover,
+  div[class*="product"] button[class*="pink"]:hover,
+  [class*="section"] button[class*="pink"]:hover,
+  [class*="Products"] button[class*="pink"]:hover {
+    background-color: #F472B6 !important;
+    background: #F472B6 !important;
+  }
+
+  /* ============================================
+     MAXIMUM PRIORITY: FORCE ALL INPUT BORDERS TO NEUTRAL GRAY
+     This section has the HIGHEST SPECIFICITY and will override ALL other styles
+     Using #D0D5DD (neutral gray-blue) to avoid any brown/yellow tint
+     ============================================ */
+  
+  /* Override ALL input borders - Maximum specificity */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="phone"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  input[type="date"],
+  input[type="time"],
+  input[type="datetime-local"],
+  input[type="month"],
+  input[type="week"],
+  input[type="color"],
+  textarea,
+  select,
+  input,
+  * input,
+  * textarea,
+  * select,
+  form input,
+  form textarea,
+  form select,
+  div input,
+  div textarea,
+  div select,
+  section input,
+  section textarea,
+  section select,
+  body input,
+  body textarea,
+  body select,
+  html input,
+  html textarea,
+  html select {
+    border-color: #D0D5DD !important;
+    border-top-color: #D0D5DD !important;
+    border-right-color: #D0D5DD !important;
+    border-bottom-color: #D0D5DD !important;
+    border-left-color: #D0D5DD !important;
+  }
+
+  /* Override ALL input border states - Maximum specificity */
+  input[type="text"]:focus,
+  input[type="text"]:active,
+  input[type="text"]:hover,
+  input[type="text"]:focus-visible,
+  input[type="text"]:focus-within,
+  input[type="email"]:focus,
+  input[type="email"]:active,
+  input[type="email"]:hover,
+  input[type="email"]:focus-visible,
+  input[type="email"]:focus-within,
+  input[type="tel"]:focus,
+  input[type="tel"]:active,
+  input[type="tel"]:hover,
+  input[type="tel"]:focus-visible,
+  input[type="tel"]:focus-within,
+  input[type="phone"]:focus,
+  input[type="phone"]:active,
+  input[type="phone"]:hover,
+  input[type="phone"]:focus-visible,
+  input[type="phone"]:focus-within,
+  input[type="number"]:focus,
+  input[type="number"]:active,
+  input[type="number"]:hover,
+  input[type="number"]:focus-visible,
+  input[type="number"]:focus-within,
+  input[type="password"]:focus,
+  input[type="password"]:active,
+  input[type="password"]:hover,
+  input[type="password"]:focus-visible,
+  input[type="password"]:focus-within,
+  input[type="search"]:focus,
+  input[type="search"]:active,
+  input[type="search"]:hover,
+  input[type="search"]:focus-visible,
+  input[type="search"]:focus-within,
+  textarea:focus,
+  textarea:active,
+  textarea:hover,
+  textarea:focus-visible,
+  textarea:focus-within,
+  select:focus,
+  select:active,
+  select:hover,
+  select:focus-visible,
+  select:focus-within,
+  input:focus,
+  input:active,
+  input:hover,
+  input:focus-visible,
+  input:focus-within,
+  * input:focus,
+  * input:active,
+  * input:hover,
+  * textarea:focus,
+  * textarea:active,
+  * textarea:hover,
+  * select:focus,
+  * select:active,
+  * select:hover {
+    border-color: #EC4899 !important;
+    border-top-color: #EC4899 !important;
+    border-right-color: #EC4899 !important;
+    border-bottom-color: #EC4899 !important;
+    border-left-color: #EC4899 !important;
+  }
+
+  /* Override ALL container borders that wrap inputs - Maximum specificity */
+  div[class*="border"],
+  div[style*="border"],
+  div[style*="borderColor"],
+  div[style*="border-color"],
+  *[class*="border"][class*="input"],
+  *[style*="border"] input,
+  *[style*="borderColor"] input,
+  *[style*="border-color"] input {
+    border-color: #D0D5DD !important;
+    border-top-color: #D0D5DD !important;
+    border-right-color: #D0D5DD !important;
+    border-bottom-color: #D0D5DD !important;
+    border-left-color: #D0D5DD !important;
+  }
+
+  div[class*="border"]:focus-within,
+  div[style*="border"]:focus-within,
+  div[style*="borderColor"]:focus-within,
+  div[style*="border-color"]:focus-within,
+  *[class*="border"][class*="input"]:focus-within,
+  *[style*="border"]:focus-within input,
+  *[style*="borderColor"]:focus-within input,
+  *[style*="border-color"]:focus-within input {
+    border-color: #EC4899 !important;
+    border-top-color: #EC4899 !important;
+    border-right-color: #EC4899 !important;
+    border-bottom-color: #EC4899 !important;
+    border-left-color: #EC4899 !important;
+  }
+
+  /* Override ALL Tailwind border classes - Maximum specificity */
+  .border-gray-300,
+  .border-gray-200,
+  .border-gray-400,
+  .border-gray-500,
+  .border-gray-600,
+  .border-amber-300,
+  .border-amber-200,
+  .border-amber-400,
+  .border-yellow-300,
+  .border-yellow-200,
+  .border-yellow-400,
+  input.border-gray-300,
+  input.border-gray-200,
+  input.border-gray-400,
+  div.border-gray-300,
+  div.border-gray-200,
+  div.border-gray-400,
+  div.border-gray-300 input,
+  div.border-gray-200 input,
+  div.border-gray-400 input,
+  * .border-gray-300,
+  * .border-gray-200,
+  * .border-gray-400,
+  *[class*="border-gray-300"],
+  *[class*="border-gray-200"],
+  *[class*="border-gray-400"],
+  *[class*="border-amber"],
+  *[class*="border-yellow"] {
+    border-color: #D0D5DD !important;
+    border-top-color: #D0D5DD !important;
+    border-right-color: #D0D5DD !important;
+    border-bottom-color: #D0D5DD !important;
+    border-left-color: #D0D5DD !important;
+  }
+
+  .border-gray-300:focus-within,
+  .border-gray-200:focus-within,
+  .border-gray-400:focus-within,
+  input.border-gray-300:focus,
+  input.border-gray-200:focus,
+  input.border-gray-400:focus,
+  div.border-gray-300:focus-within,
+  div.border-gray-200:focus-within,
+  div.border-gray-400:focus-within,
+  div.border-gray-300:focus-within input,
+  div.border-gray-200:focus-within input,
+  div.border-gray-400:focus-within input {
+    border-color: #EC4899 !important;
+    border-top-color: #EC4899 !important;
+    border-right-color: #EC4899 !important;
+    border-bottom-color: #EC4899 !important;
+    border-left-color: #EC4899 !important;
+  }
+
+  /* Override ALL inline style border colors - Maximum specificity */
+  [style*="borderColor"],
+  [style*="border-color"],
+  [style*="borderColor: #D1D5DB"],
+  [style*="border-color: #D1D5DB"],
+  [style*="borderColor: '#D1D5DB'"],
+  [style*="border-color: '#D1D5DB'"],
+  [style*="borderColor: #E5E7EB"],
+  [style*="border-color: #E5E7EB"],
+  [style*="borderColor: '#E5E7EB'"],
+  [style*="border-color: '#E5E7EB'"],
+  [style*="borderColor: #"],
+  [style*="border-color: #"],
+  *[style*="borderColor"],
+  *[style*="border-color"] {
+    border-color: #D0D5DD !important;
+    border-top-color: #D0D5DD !important;
+    border-right-color: #D0D5DD !important;
+    border-bottom-color: #D0D5DD !important;
+    border-left-color: #D0D5DD !important;
+  }
+
+  [style*="borderColor"]:focus-within,
+  [style*="border-color"]:focus-within,
+  *[style*="borderColor"]:focus-within,
+  *[style*="border-color"]:focus-within {
+    border-color: #EC4899 !important;
+    border-top-color: #EC4899 !important;
+    border-right-color: #EC4899 !important;
+    border-bottom-color: #EC4899 !important;
+    border-left-color: #EC4899 !important;
+  }
+
+  /* Referral Code Section - Gray Background with !important */
+  .referral-code-section {
+    background-color: #F5F5F5 !important;
+    background: #F5F5F5 !important;
+  }
+
+  /* Referral Code Box - Yellow Background with !important */
+  .referral-code-box {
+    background-color: #FFD666 !important;
+    background: #FFD666 !important;
+  }
+
+  /* Mobile Profile Header - User Avatar & Name */
+  @media (max-width: 900px) {
+    .header-user-section {
+      display: flex !important;
+      align-items: center !important;
+      padding: 12px 16px !important;
+      overflow: visible !important;
+      min-width: 0 !important;
+    }
+
+    .profile-avatar {
+      width: 40px !important;
+      height: 40px !important;
+      border-radius: 50% !important;
+      object-fit: cover !important;
+      object-position: center !important;
+      background-color: #ffffff !important;
+      border: 2px solid #ffffff !important;
+      display: block !important;
+      flex-shrink: 0 !important;
+      min-width: 40px !important;
+      min-height: 40px !important;
+    }
+
+    .header-user-section .profile-avatar {
+      margin-right: 12px !important; /* spacing between avatar and name */
+    }
+
+    /* Ensure profile image inside avatar is properly centered and displayed */
+    .profile-avatar img,
+    .profile-avatar [data-radix-avatar-image] {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: center !important;
+      border-radius: 50% !important;
+      display: block !important;
+    }
+
+    .header-username {
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: #ffffff !important;
+    }
+
+    .profile-avatar-fallback {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      color: #D32F2F !important;
+      background-color: #ffffff !important;
+    }
+  }
+
+  /* Extra-small screens - slightly smaller avatar */
+  @media (max-width: 400px) {
+    .profile-avatar {
+      width: 36px !important;
+      height: 36px !important;
+    }
+  }
+
+  /* Mobile Page Content - Dynamic header and footer offsets */
+  @media (max-width: 900px) {
+    .page-content {
+      position: relative;
+      margin-top: var(--header-offset, 0px);
+      margin-bottom: var(--footer-offset, 0px);
+      padding-top: 8px; /* minimal top gap */
+      padding-bottom: 8px; /* minimal bottom gap */
+      width: 100%;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    /* My Orders - tabs header: reduce bottom padding to 2px */
+    .orders-tabs-header.page-content {
+      padding-bottom: 2px !important;
+    }
+
+    /* Fixed footer styling */
+    .mobile-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+    }
+  }
+
+  /* Mobile - Disable all button hover animations and transitions */
+  @media (max-width: 768px) {
+    button:hover,
+    .btn:hover,
+    [role="button"]:hover,
+    a[role="button"]:hover {
+      transform: none !important;
+      scale: 1 !important;
+      box-shadow: none !important;
+      transition: none !important;
+    }
+
+    button:hover::before,
+    button:hover::after,
+    .btn:hover::before,
+    .btn:hover::after,
+    [role="button"]:hover::before,
+    [role="button"]:hover::after {
+      display: none !important;
+      opacity: 0 !important;
+      scale: 0 !important;
+    }
+  }
+
+  /* OTP Verification Page - Visually Balanced Layout */
+  .otp-page-container {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    min-height: auto !important;
+    padding-top: 24px !important;
+    padding-bottom: 32px !important;
+  }
+
+  .otp-content-wrapper {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+  }
+
+  /* Orders Page - small 5px gap above search bar */
+  .orders-content-wrapper {
+    padding-top: 5px !important;  /* ~5px space above search bar */
+    padding-bottom: 24px !important; /* keep bottom spacing for content */
+  }
+
+  /* Orders Tabs Header - remove bottom padding */
+  .orders-tabs-header {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .otp-illustration {
+    margin-top: 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Address Selector Popover - Match App Color Theme */
+  [data-radix-popper-content-wrapper] [role="dialog"] {
+    background-color: #FFFFFF !important;
+    border: 2px solid #1E2A78 !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  /* Address Selector Header */
+  .address-selector-header {
+    border-bottom-color: rgba(30, 42, 120, 0.2) !important;
+  }
+
+  .address-selector-header h3 {
+    color: #1E2A78 !important;
+  }
+
+  /* Address Item Styles */
+  .address-item {
+    border-color: rgba(30, 42, 120, 0.1) !important;
+  }
+
+  .address-item:hover {
+    background-color: rgba(30, 42, 120, 0.05) !important;
+  }
+
+  .address-item.selected {
+    background-color: rgba(30, 42, 120, 0.1) !important;
+  }
+
+  .address-item-label {
+    color: #1E2A78 !important;
+  }
+
+  .address-item-text {
+    color: #374151 !important;
+  }
+
+  .address-item-location {
+    color: #4B5563 !important;
+  }
+
+  .address-item-landmark {
+    color: #6B7280 !important;
+  }
+
+  /* Address Badges */
+  .address-badge-default {
+    background-color: #1E2A78 !important;
+    color: #FFFFFF !important;
+  }
+
+  .address-badge-selected {
+    background-color: #F472B6 !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Manage Addresses Button */
+  .manage-addresses-button {
+    color: #1E2A78 !important;
+    border-top-color: rgba(30, 42, 120, 0.2) !important;
+  }
+
+  .manage-addresses-button:hover {
+    color: #F472B6 !important;
+  }
+
+  /* Track Order Back Button - Color Transition with !important */
+  .track-order-back-button {
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out !important;
+  }
+
+  .track-order-back-button:hover {
+    color: #1A2FA3 !important;
+    background-color: #EEF3FF !important;
+  }

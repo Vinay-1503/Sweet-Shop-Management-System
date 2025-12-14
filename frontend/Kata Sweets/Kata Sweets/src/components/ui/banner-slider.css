@@ -1,0 +1,154 @@
+/* Hero Banner with Diagonal Shutter Animation */
+.hero-banner-container {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  min-height: 500px;
+  max-height: 800px;
+  overflow: hidden;
+  background: #fff;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.hero-image-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-image-wrapper.base {
+  z-index: 1;
+}
+
+.hero-image-wrapper.top {
+  z-index: 2;
+  transition: opacity 0.6s ease;
+}
+
+.hero-image-wrapper.top.fade-out {
+  opacity: 0;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Pink overlay for base layer */
+.pink-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 109, 170, 0.15) 0%,
+    rgba(255, 209, 227, 0.25) 100%
+  );
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
+/* Diagonal Shutters */
+.shutter {
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: #ffdce7; /* soft pink */
+  z-index: 3;
+  transform: rotate(45deg);
+  transition: transform 1.2s ease-in-out;
+  pointer-events: none;
+}
+
+/* Shutter from top-left */
+.shutter-top {
+  top: -120%;
+  left: -120%;
+}
+
+/* Shutter from bottom-right */
+.shutter-bottom {
+  bottom: -120%;
+  right: -120%;
+}
+
+/* Animate shutters outward */
+.shutter.open.shutter-top {
+  transform: translate(200%, 200%) rotate(45deg);
+}
+
+.shutter.open.shutter-bottom {
+  transform: translate(-200%, -200%) rotate(45deg);
+}
+
+/* Navigation Arrows */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.nav-arrow:hover {
+  opacity: 0.7;
+}
+
+.nav-arrow-left {
+  left: 16px;
+}
+
+.nav-arrow-right {
+  right: 16px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .hero-banner-container {
+    height: 60vh;
+    min-height: 400px;
+    max-height: 600px;
+  }
+
+  .nav-arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-arrow-left {
+    left: 12px;
+  }
+
+  .nav-arrow-right {
+    right: 12px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .shutter {
+    transition: none;
+  }
+
+  .hero-image-wrapper.top {
+    transition: none;
+  }
+
+  .shutter.open.shutter-top,
+  .shutter.open.shutter-bottom {
+    transform: none;
+    opacity: 0;
+  }
+}
+

@@ -1,0 +1,129 @@
+/* Force main page to scroll vertically */
+body, html {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  touch-action: pan-y pan-x pinch-zoom !important;
+  /* Use min-height instead of height to allow scrolling */
+  min-height: 100vh;
+  height: auto;
+}
+
+/* Force horizontal containers to only scroll horizontally - Optimized for performance */
+.horizontal-scroll {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  /* Performance optimizations */
+  will-change: scroll-position !important;
+  transform: translateZ(0) !important; /* Hardware acceleration */
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  /* Remove smooth scrolling to prevent lag */
+  scroll-behavior: auto !important;
+}
+
+/* Mobile: Allow vertical scrolling to pass through horizontal containers */
+@media (max-width: 768px) {
+  .horizontal-scroll {
+    touch-action: pan-x pan-y !important; /* Allow both directions */
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important; /* Allow vertical scroll to bubble */
+  }
+}
+
+/* Desktop: Only horizontal scrolling */
+@media (min-width: 769px) {
+  .horizontal-scroll {
+    touch-action: pan-x !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important;
+  }
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Target specific problematic sections - Mobile: allow vertical scroll */
+@media (max-width: 768px) {
+.px-4.py-6 .horizontal-scroll {
+    touch-action: pan-x pan-y !important; /* Allow both directions */
+  overflow-y: hidden !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important; /* Allow vertical scroll to bubble */
+}
+
+/* Force all flex containers with overflow-x-auto to not block vertical scroll */
+.flex.space-x-3.overflow-x-auto.scrollbar-hide.horizontal-scroll {
+    touch-action: pan-x pan-y !important; /* Allow both directions */
+  overflow-y: hidden !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important; /* Allow vertical scroll to bubble */
+  }
+}
+
+/* Remove any conflicting styles */
+.overflow-x-auto {
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+}
+
+/* Force mobile scrolling */
+@media (max-width: 768px) {
+  body, html {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    /* Use min-height instead of height to allow scrolling */
+    min-height: 100vh !important;
+    height: auto !important;
+    position: relative !important;
+  }
+  
+  /* Ensure main content can scroll vertically */
+  .main-content {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+  
+  .mobile-scrollable {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Horizontal scroll containers - allow vertical scrolling to pass through */
+  .horizontal-scroll {
+    touch-action: pan-x pan-y !important; /* Allow both directions so vertical scroll can pass through */
+    overflow-y: hidden !important;
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: auto !important; /* Critical: allow vertical scroll to bubble up */
+  }
+  
+  /* Ensure mobile content sections don't block scrolling */
+  .scrollable-content {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overflow-y: visible !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  /* Force all mobile sections to allow vertical scrolling */
+  .scrollable-content > * {
+    touch-action: pan-y pan-x pinch-zoom !important;
+    overflow-y: visible !important;
+  }
+  
+  /* Ensure horizontal scroll containers don't block parent scrolling */
+  .scrollable-content .horizontal-scroll {
+    touch-action: pan-x pan-y !important; /* Allow both so vertical scroll works */
+  }
+} 
