@@ -1,6 +1,6 @@
 Sweet Shop Management System
 Backend + Frontend Integration (Kata Sweets)
-A full-stack Sweet Shop Management System built with Spring Boot (Backend) and React + TypeScript (Frontend).
+A full-stack Sweet Shop Management System built with Spring Boot (Backend) and React + TypeScript (Front0    
 This project demonstrates secure role-based authentication, RESTful APIs, Test-Driven Development (TDD), and a modern premium e-commerce UI.
 ________________________________________
 📋 Table of Contents
